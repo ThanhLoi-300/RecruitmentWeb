@@ -1,0 +1,38 @@
+package com.example.springrestful.service.AdminService;
+
+import com.example.springrestful.model.entity.Admin.Admin;
+import com.example.springrestful.model.entity.Admin.AdminProfile;
+import com.example.springrestful.model.request.RequestAdmin.RequestAdmin;
+import com.example.springrestful.model.request.RequestAdmin.RequestAdminProfile;
+import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
+import com.example.springrestful.model.response.ResponseAdmin.ResponseAdminProfile;
+
+import java.util.List;
+
+public interface AdminService {
+    int countNumberAccessWebsite () throws Exception;
+    int countNumberUserRegister () throws Exception;
+    int countNumberUserLogin () throws Exception;
+    int countNumberTransactionsSuccessful () throws Exception;
+    int countMostPopularJob () throws Exception;
+    int countMostPopularRecruitment () throws Exception;
+    int countMostPopularSkill () throws Exception;
+    int countMostPopularCategory () throws Exception;
+
+    //===========================Admin=============================
+    Admin findById(int id)throws Exception;
+    List<Admin> findAll()throws Exception;
+    List<Admin> findByRole(String role)throws Exception;
+    List<ResponseAdmin> findByStatus(int status)throws Exception;
+    List<ResponseAdmin> findByManagedBy(Integer managedBy)throws Exception;
+//    List<ResponseAdmin> findByAccountStatus(int accountStatus);
+    List<Admin> findByAccount(int accountId)throws Exception;
+    ResponseAdmin save(RequestAdmin admin);
+    void removeById (int id) throws Exception;
+    //===========================AdminProfile=============================
+    ResponseAdminProfile findProfileById(int id)throws Exception;
+    List<AdminProfile> findAllProfile()throws Exception;
+
+    ResponseAdminProfile saveProfile(RequestAdminProfile admin)throws Exception;
+    void removeProfileById(int id) throws Exception;
+}
