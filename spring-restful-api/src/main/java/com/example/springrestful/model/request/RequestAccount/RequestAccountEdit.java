@@ -1,5 +1,6 @@
 package com.example.springrestful.model.request.RequestAccount;
 
+import com.example.springrestful.model.entity.Role.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
@@ -22,9 +23,9 @@ public class RequestAccountEdit {
             , message = "Password must between 6-20 characters. Must contain at least one lower, one upper and one special character")
     private String password;
 
-//    @NotEmpty(message = "role is required")
-    @Min(value = 1,message = "Role have value have to >0")
-    private int role;
+    private String role;
+
+    private int role_id;
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Invalid email format")

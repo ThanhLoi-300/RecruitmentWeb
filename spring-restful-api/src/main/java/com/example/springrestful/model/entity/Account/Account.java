@@ -1,9 +1,9 @@
 package com.example.springrestful.model.entity.Account;
 
-import com.example.springrestful.model.entity.Admin.Admin;
 import com.example.springrestful.model.entity.Job.Job;
 import com.example.springrestful.model.entity.News.Comment;
 import com.example.springrestful.model.entity.News.News;
+import com.example.springrestful.model.entity.Role.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -90,6 +90,9 @@ public class Account {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
+    @Column(name = "role")
+    private String role;
+
     @Min(0)
     @Column(name = "followers")
     private int followers;
@@ -104,17 +107,11 @@ public class Account {
     @OneToMany(mappedBy = "account")
     private List<Comment> commentList;
 
-    @OneToMany(mappedBy = "accountAdmin")
-    private List<Admin> adminList;
-
     @OneToMany(mappedBy = "account")
     private List<Job> jobs;
 
-//    @NotEmpty(message = "role is required")
-    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-    @JoinColumn(name = "role",nullable = false,referencedColumnName = "id")
-    private AccountRole role;
-
-
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role_id;
 
 }

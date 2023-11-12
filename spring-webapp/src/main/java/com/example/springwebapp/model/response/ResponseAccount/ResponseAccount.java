@@ -1,5 +1,6 @@
 package com.example.springwebapp.model.response.ResponseAccount;
 
+import com.example.springwebapp.model.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,5 @@ public class ResponseAccount {
     private String birthday;
     private int followers;
     private int following;
+    private Role role_id;
 }

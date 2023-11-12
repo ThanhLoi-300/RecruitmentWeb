@@ -29,6 +29,12 @@ public class AccountRole {
     @Column(name = "name", nullable = false, length = 10)
     private String name;
 
-    @OneToMany(mappedBy = "role")
-    private List<Account> accountList;
+    @Column(name = "account_manage", nullable = false)
+    private int account_manage;
+
+    @Column(name = "role_manage", nullable = false)
+    private int role_manage;
+
+//    @OneToMany(mappedBy = "role")
+//    private List<Account> accountList;
 }

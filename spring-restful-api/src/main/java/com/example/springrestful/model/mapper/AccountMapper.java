@@ -11,7 +11,7 @@ import java.util.List;
 public interface AccountMapper {
     @Mapping(source = "account.id", target = "id")
     @Mapping(source = "account.username", target = "username")
-    @Mapping(source = "account.role.id", target = "role")
+    @Mapping(source = "account.role", target = "role")
 
     @Mapping(source = "account.status", target = "status")
     @Mapping(source = "account.email", target = "email")
@@ -26,6 +26,7 @@ public interface AccountMapper {
     @Mapping(source = "account.birthday", target = "birthday", dateFormat = "yyyy-MM-dd")
     @Mapping(source = "account.followers", target = "followers")
     @Mapping(source = "account.following", target = "following")
+    @Mapping(source = "account.role_id", target = "role_id")
     ResponseAccount toResponseAccount(Account account);
 
     List<ResponseAccount> toResponseAccountList(List<Account> account);

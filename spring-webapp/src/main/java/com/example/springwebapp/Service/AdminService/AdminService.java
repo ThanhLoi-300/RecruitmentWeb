@@ -1,8 +1,11 @@
 package com.example.springwebapp.Service.AdminService;
 
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
+import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
+import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 
 import java.util.List;
 
@@ -17,6 +20,7 @@ public interface AdminService {
 //    int countMostPopularCategory () throws Exception;
 
     //===========================Admin=============================
+    ApiResponse<ResponseAccount> loginAccount(RequestAccountLogin requestAccountLogin) throws Exception;
     ResponseAdmin findById(int id);
     List<ResponseAdmin> findAll();
     List<ResponseAdmin> findByRole(String role);
@@ -35,4 +39,9 @@ public interface AdminService {
 //
 //    ResponseAdminProfile saveProfile(RequestAdminProfile admin)throws Exception;
 //    void removeProfileById(int id) throws Exception;
+
+    //====================Role====================
+    List<ResponseRole> getAllRole() throws Exception;
+    ApiResponse<ResponseRole> getRoleById(int id) throws Exception;
+    ApiResponse<ResponseRole> deleteRoleById(int id) throws Exception;
 }

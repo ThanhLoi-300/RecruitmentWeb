@@ -1,5 +1,6 @@
 package com.example.springrestful.controller;
 
+import com.example.springrestful.exception.ApplicationException;
 import com.example.springrestful.model.entity.Account.Account;
 import com.example.springrestful.model.entity.Account.AccountRole;
 import com.example.springrestful.model.mapper.AccountMapper;
@@ -14,6 +15,7 @@ import com.example.springrestful.service.AccountService.AccountRoleService;
 import com.example.springrestful.service.AccountService.AccountService;
 import com.example.springrestful.validator.AccountValidator.AccountEditValidator;
 import com.example.springrestful.validator.AccountValidator.AccountRegisterValidator;
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,21 @@ public class AccountController {
 
     @Autowired
     AccountRoleMapper accountRoleMapper;
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<ResponseAccount>> loginAccount(@RequestBody RequestAccountLogin requestAccountLogin) throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+
+            ResponseAccount account = accountService.loginAccount(requestAccountLogin.getUsername(),requestAccountLogin.getPassword(),requestAccountLogin.getIsAdmin());
+            apiResponse.ok(account);
+            System.out.println("account "+ account);
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
+
     @GetMapping("/list")
     public ResponseEntity<List<ResponseAccount>> getAllAccount(@RequestParam(value = "role", required = false) String role) throws Exception {
         List<Account> accountList = null;
@@ -88,7 +105,7 @@ public class AccountController {
         }
 
         if (requestAccountRegister != null) {
-            ResponseAccount responseAccount = accountService.saveAccount(requestAccountRegister, role);
+            ResponseAccount responseAccount = accountService.saveAccount(requestAccountRegister);
             apiResponse.ok(responseAccount);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         }
@@ -122,7 +139,7 @@ public class AccountController {
         }
 
         if (requestAccountEdit != null) {
-            ResponseAccount responseAccount = accountService.saveAccount(requestAccountEdit,role);
+            ResponseAccount responseAccount = accountService.saveAccount(requestAccountEdit);
             apiResponse.ok(responseAccount);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         }
@@ -157,7 +174,7 @@ public class AccountController {
         }
 
         if (requestAccountEdit != null) {
-            ResponseAccount responseAccount = accountService.saveAccount(requestAccountEdit,role);
+            ResponseAccount responseAccount = accountService.saveAccount(requestAccountEdit);
             apiResponse.ok(responseAccount);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         }
@@ -198,7 +215,7 @@ public class AccountController {
             requestAccountEdit.setIdentifyCardNumber(responseAccount.getIdentifyCardNumber());
             requestAccountEdit.setIdentifyCardName(responseAccount.getIdentifyCardName());
             requestAccountEdit.setBirthday(responseAccount.getBirthday());
-            accountService.saveAccount(requestAccountEdit,role);
+            accountService.saveAccount(requestAccountEdit);
 
             apiResponse.ok(requestAccountEdit);
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);

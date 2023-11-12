@@ -2,17 +2,22 @@ package com.example.springrestful.service.AccountService;
 
 import com.example.springrestful.model.entity.Account.Account;
 import com.example.springrestful.model.entity.Account.AccountRole;
+import com.example.springrestful.model.entity.UserLogin.UserLogin;
 import com.example.springrestful.model.mapper.AccountMapper;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountEdit;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountRegister;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.repository.AccountRepository;
+import com.example.springrestful.repository.AccountRoleRepository;
+import com.example.springrestful.repository.UserLoginRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -23,14 +28,21 @@ public class AccountServiceImpl implements AccountService{
 
     @Autowired
     AccountMapper accountMapper;
+    @Autowired
+    AccountRoleRepository accountRoleRepository;
+    @Autowired
+    UserLoginRepository userLoginRepository;
 
     @Override
-    public ResponseAccount saveAccount(RequestAccountRegister account,AccountRole role) throws Exception {
+    public ResponseAccount saveAccount(RequestAccountRegister account) throws Exception {
         String defaultSetMessage = "Haven't set yet";
+        if(accountRepository.existsByUsername(account.getUsername()))
+            return null;
+
         Account savedAccount = new Account();
         savedAccount.setUsername(account.getUsername());
         savedAccount.setPassword(BCrypt.hashpw(account.getPassword(), BCrypt.gensalt()));
-        savedAccount.setRole(role);
+        savedAccount.setRole(account.getRole());
         savedAccount.setEmail(account.getEmail());
         savedAccount.setPhoneNumber(account.getPhoneNumber());
         savedAccount.setFullName(account.getFullName());
@@ -42,17 +54,17 @@ public class AccountServiceImpl implements AccountService{
         savedAccount.setIdentifyCardNumber(defaultSetMessage);
         savedAccount.setIdentifyCardName(defaultSetMessage);
         savedAccount.setBirthday(new Date());
+        savedAccount.setRole_id(accountRoleRepository.findByRoleId(account.getRole_id()));
 
         return accountMapper.toResponseAccount(accountRepository.save(savedAccount));
 
     }
 
     @Override
-    public ResponseAccount saveAccount(RequestAccountEdit account,AccountRole role) throws Exception {
+    public ResponseAccount saveAccount(RequestAccountEdit account) throws Exception {
         Account savedAccount = accountRepository.findById(account.getId());
         savedAccount.setUsername(account.getUsername());
         // do not update password here
-        savedAccount.setRole(role);
         savedAccount.setEmail(account.getEmail());
         savedAccount.setPhoneNumber(account.getPhoneNumber());
         savedAccount.setFullName(account.getFullName());
@@ -65,6 +77,7 @@ public class AccountServiceImpl implements AccountService{
         savedAccount.setStatus(account.getStatus());
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         savedAccount.setBirthday(dateFormat.parse(account.getBirthday()));
+        savedAccount.setRole_id(accountRoleRepository.findByRoleId(account.getRole_id()));
 
         return accountMapper.toResponseAccount(accountRepository.save(savedAccount));
     }
@@ -95,10 +108,32 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public List<Account> findByRole(int role) throws Exception {
-        return accountRepository.findByRoleWithJPQL(role);
+        //return accountRepository.findByRoleWithJPQL(role);
+        return null;
     }
     @Override
     public Account findById(int id) throws Exception {
         return accountRepository.findById(id);
+    }
+
+    @Override
+    public ResponseAccount loginAccount(String username, String password,int isAdmin) throws Exception {
+        Account account = accountRepository.findByUsername(username);
+        LocalDate currentDate = LocalDate.now();
+        if(account != null ){
+            boolean matches = BCrypt.checkpw(password,account.getPassword());
+            if(matches) {
+                if(isAdmin == 0){
+                    if(userLoginRepository.countUserLoginsToday(account.getUsername(), currentDate) ==0){
+                        UserLogin userLogin = new UserLogin();
+                        userLogin.setUsername(account.getUsername());
+                        userLogin.setLoginTime(LocalDateTime.now());
+                        userLoginRepository.save(userLogin);
+                    }
+                }
+                return accountMapper.toResponseAccount(account);
+            }
+        }
+        return null;
     }
 }

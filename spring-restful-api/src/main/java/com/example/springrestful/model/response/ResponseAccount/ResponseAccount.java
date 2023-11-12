@@ -1,5 +1,6 @@
 package com.example.springrestful.model.response.ResponseAccount;
 
+import com.example.springrestful.model.entity.Role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class ResponseAccount {
     private String id;
     private String username;
-    private int role;
+    private String role;
     private int status;
     private String email;
     private String phoneNumber;
@@ -26,4 +27,5 @@ public class ResponseAccount {
     private String birthday;
     private int followers;
     private int following;
+    private Role role_id;
 }

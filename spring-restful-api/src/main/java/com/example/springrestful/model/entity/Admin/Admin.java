@@ -62,7 +62,7 @@ public class Admin {
     @JoinColumn(name = "account_id",referencedColumnName = "id")
     private Account accountAdmin;
 
-    @OneToMany(mappedBy = "adminAdminProfile")
-    private List<AdminProfile> adminProfileList;
+//    @OneToMany(mappedBy = "adminAdminProfile")
+//    private List<AdminProfile> adminProfileList;
 
 }

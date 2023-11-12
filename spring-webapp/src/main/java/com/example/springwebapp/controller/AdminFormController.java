@@ -51,7 +51,7 @@ public class AdminFormController {
 //        model.addAttribute("accountList", accountList);
         model.addAttribute("responseAdmin", requestAdmin);
         model.addAttribute("errorMap", new LinkedHashMap<>());
-        return "admin_form";
+        return "/admin/admin_form";
     }
     @GetMapping(value = "/admin/form/{id}")
     public String findAll(Model model, @PathVariable(value = "id", required = false) int id) {
@@ -65,7 +65,7 @@ public class AdminFormController {
         model.addAttribute("accountList", accountList);
         model.addAttribute("responseAdmin", responseAdmin);
         model.addAttribute("errorMap", new LinkedHashMap<>());
-        return "admin_form";
+        return "/admin/admin_form";
     }
 
     @PostMapping (value = "/admin/form")
@@ -92,7 +92,7 @@ public class AdminFormController {
         model.addAttribute("requestAdmin", requestAdmin);
         model.addAttribute("messageError", "An error has occurred, please accept it again!");
         model.addAttribute("errorMap", errorMap);
-        return "admin_form";
+        return "/admin/admin_form";
     }
     @DeleteMapping(value = "/admin/delete")
     @ResponseBody

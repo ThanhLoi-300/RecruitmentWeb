@@ -20,7 +20,8 @@ public class AccountRoleServiceImpl implements AccountRoleService{
 
     @Override
     public List<AccountRole> findAll() throws Exception {
-        return accountRoleRepository.findAll();
+        //return accountRoleRepository.findAll();
+        return null;
     }
 
 }

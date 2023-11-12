@@ -20,4 +20,5 @@ public class RequestAccountLogin {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{6,20}$"
             , message = "Password must between 6-20 characters. Must contain at least one lower, one upper and one special character")
     private String password;
+    private int isAdmin;
 }

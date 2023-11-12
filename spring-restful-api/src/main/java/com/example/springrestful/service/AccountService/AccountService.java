@@ -9,8 +9,8 @@ import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import java.util.List;
 
 public interface AccountService {
-    ResponseAccount saveAccount (RequestAccountRegister account,AccountRole role) throws Exception;
-    ResponseAccount saveAccount (RequestAccountEdit account,AccountRole role) throws Exception;
+    ResponseAccount saveAccount (RequestAccountRegister account) throws Exception;
+    ResponseAccount saveAccount (RequestAccountEdit account) throws Exception;
     void removeAccountById (int id) throws Exception;
     List<ResponseAccount> findAllAccounts () throws Exception;
     ResponseAccount findAccountById (int id) throws Exception;
@@ -18,5 +18,6 @@ public interface AccountService {
     List<Account> findAll()throws Exception;
     List<Account> findByRole(int role)throws Exception;
     Account findById(int id)throws Exception;
+    ResponseAccount loginAccount (String username, String password, int isAdmin) throws Exception;
 
 }

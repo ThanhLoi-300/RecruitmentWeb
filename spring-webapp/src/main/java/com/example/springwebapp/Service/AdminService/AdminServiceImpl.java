@@ -2,13 +2,17 @@ package com.example.springwebapp.Service.AdminService;
 
 
 
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
+import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
+import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import com.example.springwebapp.restapi.CommonRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +23,10 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     private CommonRestClient commonRestClient;
     private String apiUrl= "http://localhost:8080/api/admin";
+    private String apiUrlLogin= "http://localhost:8080/api";
+
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
 
     @Override
@@ -59,6 +67,17 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public ApiResponse<ResponseAccount> loginAccount(RequestAccountLogin requestAccountLogin) throws Exception {
+        try {
+            //ApiResponse response = restTemplate.getForObject(apiUrlLogin+"/account/login", ApiResponse.class);
+            return commonRestClient.post(apiUrlLogin+"/account/login", requestAccountLogin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public ResponseAdmin findById(int id) {
         try {
             Map<String, String> params = new HashMap<>();
@@ -81,6 +100,20 @@ public class AdminServiceImpl implements AdminService{
             return null;
         }
     }
+
+    @Override
+    public List<ResponseRole> getAllRole() throws Exception {
+        return commonRestClient.getAll(apiUrl+"/role");
+    }
+    @Override
+    public ApiResponse<ResponseRole> getRoleById(int id) throws Exception{
+        return commonRestClient.getByConditionUnique(apiUrl+"/role",id);
+    }
+    @Override
+    public ApiResponse<ResponseRole> deleteRoleById(int id) throws Exception{
+        return commonRestClient.deleteByCondition(apiUrl+"/role",id);
+    }
+
     @Override
     public ApiResponse<ResponseAdmin> update(RequestAdmin admin) {
         try {
