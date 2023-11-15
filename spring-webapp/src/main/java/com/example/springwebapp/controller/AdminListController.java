@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.springwebapp.model.Static.Admin;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -87,10 +89,6 @@ public class AdminListController {
 
         return "/admin/account";
     }
-//    @GetMapping(value = "/admin/account/profile")
-//    public String getProfileView () {
-//        return "/admin/profile";
-//    }
     @GetMapping(value = "/admin/role")
     public String getRoleView (Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
         List<ResponseRole> apiResponse = adminService.getAllRole(name);
@@ -153,6 +151,31 @@ public class AdminListController {
             redirectAttributes.addFlashAttribute("mess","success");
         }
         return "redirect:/admin/role";
+    }
+
+    //+++++++++++++++++++++++++Account++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++User+++++++++++++++++++++++++++++++++++++++
+    @GetMapping(value = "/admin/accountUser")
+    public String getAccountUserView (Model model, @RequestParam(value = "userName") String userName, @RequestParam(value = "page") int page) throws Exception {
+        List<ResponseAccount> apiResponse = adminService.getAllUser(userName, page);
+
+        int pageSize = 3;
+        int startIndex = (page - 1) * pageSize;
+        int totalPage = (int) Math.ceil((double) apiResponse.size() / pageSize);
+
+        apiResponse = apiResponse.stream().skip(startIndex).limit(pageSize).collect(Collectors.toList());
+
+        model.addAttribute("userName",userName);
+        model.addAttribute("listUser",apiResponse);
+        model.addAttribute("totalPage",totalPage);
+        model.addAttribute("page",page);
+        return "/admin/accountUser";
+    }
+
+
+    @GetMapping(value = "/admin/account/profile")
+    public String getProfileView () {
+        return "/admin/profile";
     }
 
 }

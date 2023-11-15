@@ -47,4 +47,7 @@ public interface AdminService {
     ApiResponse<ResponseRole> deleteRoleById(int id) throws Exception;
     ApiResponse<ResponseRole> editRole(RequestRole requestRole) throws Exception;
     ApiResponse<ResponseRole> addRole(RequestRole requestRole) throws Exception;
+
+    //====================User====================
+    List<ResponseAccount> getAllUser(String userName, int page) throws Exception;
 }

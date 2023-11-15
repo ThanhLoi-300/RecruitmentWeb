@@ -4,6 +4,7 @@ import com.example.springrestful.model.entity.Admin.Admin;
 import com.example.springrestful.model.entity.Role.Role;
 import com.example.springrestful.model.request.RequestAdmin.RequestAdmin;
 import com.example.springrestful.model.request.RequestAdmin.RequestAdminProfile;
+import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdminProfile;
 
@@ -44,4 +45,7 @@ public interface AdminService {
     Role findByRolename (String name) throws Exception;
     int checkRoleExisted(int id, String name)throws Exception;
     int countAccountOfRole(int id)throws Exception;
+
+    //===========================User=============================
+    List<ResponseAccount> findAllUser (String userName, int page) throws Exception;
 }

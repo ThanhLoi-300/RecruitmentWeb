@@ -13,6 +13,10 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}" />
     <link rel="stylesheet" th:href="@{/assets/css/admin.css}">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <script th:inline="javascript">
+        var mess = /*[[${mess}]]*/ '';
+    </script>
 </head>
 <body>
 <div class="container-scroller">
@@ -47,14 +51,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>name</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> <a href="#">Xem chi tiết</a> </td>
-                                </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>name</td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> <a href="#">Xem chi tiết</a> </td>
+                            </tr>
                             </tbody>
                         </table>
 
@@ -96,6 +100,10 @@
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
 <script th:src="@{/assets/js/admin.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
+<script>
+    warning(mess)
+</script>
 
 </body>
 </html>

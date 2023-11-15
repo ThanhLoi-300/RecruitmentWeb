@@ -44,6 +44,17 @@ public class AdminController {
     @Autowired
     ValidatorUtil validatorUtil;
 
+    //++++++++++++++++++++++++++++++User+++++++++++++++++++++++++++++++
+    @GetMapping(value = "/accountUser")
+    public ResponseEntity<ApiResponse<List<ResponseAccount>>> getAllUser(@RequestParam(value = "userName") String userName, @RequestParam(value = "page") int page) throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.ok(adminService.findAllUser(userName,page));
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
 
 //    @GetMapping(value = {"","/list"})
 //    public ResponseEntity<List<ResponseAdmin>> getAllAdmin(@RequestParam(value = "role", required = false) String role) throws Exception {
@@ -235,10 +246,8 @@ public ResponseEntity<ApiResponse<List<Role>>> returnRoleById(@PathVariable int 
     @GetMapping("/role")
     public ResponseEntity<ApiResponse<List<Role>>> returnRoles(@RequestParam(value = "name", required = false) String name) throws Exception {
         try {
-            System.out.println(name);
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.ok(adminService.findAllRole(name));
-            System.out.println(adminService.findAllRole(name));
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage()); // Handle other exceptions

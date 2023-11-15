@@ -4,8 +4,10 @@ package com.example.springrestful.service.AdminService;
 import com.example.springrestful.model.entity.Account.Account;
 import com.example.springrestful.model.entity.Admin.Admin;
 import com.example.springrestful.model.entity.Role.Role;
+import com.example.springrestful.model.mapper.AccountMapper;
 import com.example.springrestful.model.mapper.AdminMapper;
 import com.example.springrestful.model.request.RequestAdmin.RequestAdmin;
+import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
 import com.example.springrestful.repository.AccountRepository;
 import com.example.springrestful.repository.AccountRoleRepository;
@@ -13,8 +15,7 @@ import com.example.springrestful.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -30,6 +31,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     AdminMapper adminMapper;
+    @Autowired
+    AccountMapper accountMapper;
 
     //@Autowired
     //AdminProfileMapper adminProfileMapper;
@@ -228,5 +231,13 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public int countAccountOfRole(int id) throws Exception{
         return accountRoleRepository.countAccountOfRole(id);
+    }
+
+    @Override
+    public List<ResponseAccount> findAllUser(String userName, int page) throws Exception {
+        List<Account> list = null;
+        if(userName.isEmpty() || userName == null) list = accountRepository.getAllUser();
+        else list = accountRepository.getAllUser(userName);
+        return accountMapper.toResponseAccountList(list);
     }
 }
