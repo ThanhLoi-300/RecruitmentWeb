@@ -203,7 +203,8 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public List<Role> findAllRole(String name) throws Exception {
-        if(name.isEmpty()) return accountRoleRepository.findAll();
+        System.out.println(name);
+        if(name == null || name.isEmpty()) return accountRoleRepository.findAll();
         else
             return accountRoleRepository.searchRoleName(name);
     }

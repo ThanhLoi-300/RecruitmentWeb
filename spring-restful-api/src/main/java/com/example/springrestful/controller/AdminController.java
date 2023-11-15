@@ -235,6 +235,7 @@ public ResponseEntity<ApiResponse<List<Role>>> returnRoleById(@PathVariable int 
     @GetMapping("/role")
     public ResponseEntity<ApiResponse<List<Role>>> returnRoles(@RequestParam(value = "name", required = false) String name) throws Exception {
         try {
+            System.out.println(name);
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.ok(adminService.findAllRole(name));
             System.out.println(adminService.findAllRole(name));
@@ -252,13 +253,12 @@ public ResponseEntity<ApiResponse<List<Role>>> returnRoleById(@PathVariable int 
             if (requestRole == null) {
                 throw new NotFoundException("Cannot find Role to create");
             }
-            accountRegisterValidator.validateCreate(requestRole, bindingResult);
 
-            if (bindingResult.hasErrors()) {
-                Map<String, String> validationErrors = validatorUtil.toErrors(bindingResult.getFieldErrors());
-                throw new ValidationException(validationErrors);
+            Role role = adminService.findByRolename(requestRole.getName());
+            if (role != null) {
+                apiResponse.error("Name is exist");
+                return new ResponseEntity<>(apiResponse, HttpStatus.OK);
             }
-
             apiResponse.ok(adminService.createRole(requestRole));
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (NotFoundException ex) {
@@ -275,16 +275,13 @@ public ResponseEntity<ApiResponse<List<Role>>> returnRoleById(@PathVariable int 
         try {
             ApiResponse apiResponse = new ApiResponse();
 
-            if (requestRole == null) {
-                throw new NotFoundException("Cannot find Role to create");
-            }
             accountRegisterValidator.validateEdit(requestRole, bindingResult);
 
             if (bindingResult.hasErrors()) {
                 Map<String, String> validationErrors = validatorUtil.toErrors(bindingResult.getFieldErrors());
                 throw new ValidationException(validationErrors);
             }
-
+            System.out.println(adminService.editRole(requestRole));
             apiResponse.ok(adminService.editRole(requestRole));
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (NotFoundException ex) {

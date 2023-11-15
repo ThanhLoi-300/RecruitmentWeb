@@ -45,14 +45,13 @@ public class AccountController {
     AccountRoleMapper accountRoleMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<ResponseAccount>> loginAccount(@RequestBody RequestAccountLogin requestAccountLogin) throws Exception {
+    public ResponseEntity<ResponseAccount> loginAccount(@RequestBody RequestAccountLogin requestAccountLogin) throws Exception {
         try {
             ApiResponse apiResponse = new ApiResponse();
 
             ResponseAccount account = accountService.loginAccount(requestAccountLogin.getUsername(),requestAccountLogin.getPassword(),requestAccountLogin.getIsAdmin());
             apiResponse.ok(account);
-            System.out.println("account "+ account);
-            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+            return new ResponseEntity<>(account, HttpStatus.OK);
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage()); // Handle other exceptions
         }

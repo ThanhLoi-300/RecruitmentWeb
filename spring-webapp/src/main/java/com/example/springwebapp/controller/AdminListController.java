@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.springwebapp.model.Static.Admin;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 public class AdminListController {
     @Autowired
@@ -49,12 +51,6 @@ public class AdminListController {
         return "/admin/admin_list";
     }
 
-    @GetMapping(value = "/admin/role/list")
-    public String allRole(Model model, @RequestParam(value = "name", required = false) String name) {
-
-        return "role_list";
-    }
-
     @GetMapping(value = "/admin/login")
     public String getLoginView () {
         return "/admin/login";
@@ -66,18 +62,17 @@ public class AdminListController {
             return "/admin/login";
         }else{
             requestAccountLogin.setIsAdmin(1);
-            ApiResponse<ResponseAccount> apiResponse = adminService.loginAccount(requestAccountLogin);
-            System.out.println("rs "+apiResponse.getPayload());
-            if(apiResponse.getPayload() == null){
+            ResponseAccount account = adminService.loginAccount(requestAccountLogin);
+            if(account == null){
                 model.addAttribute("mess", "login fail");
                 return "/admin/login";
             }else {
-//                Admin.userName = apiResponse.getPayload().getFullName();
-//                Admin.nameRole = apiResponse.getPayload().getRole_id().getName();
-//                Admin.account_manage = apiResponse.getPayload().getRole_id().getAccount_manage();
-//                Admin.admin_manage = apiResponse.getPayload().getRole_id().getAdmin_manage();
-//                Admin.role_manage = apiResponse.getPayload().getRole_id().getRole_manage();
-                //model.addAttribute("admin", apiResponse.getPayload());
+                Admin.userName = account.getFullName();
+                Admin.nameRole = account.getRole_id().getName();
+                Admin.account_manage = account.getRole_id().getAccount_manage();
+                Admin.admin_manage = account.getRole_id().getAdmin_manage();
+                Admin.role_manage = account.getRole_id().getRole_manage();
+                model.addAttribute("admin", account);
                 return "redirect:/admin/index";
             }
         }
@@ -92,40 +87,72 @@ public class AdminListController {
 
         return "/admin/account";
     }
-    @GetMapping(value = "/admin/account/profile")
-    public String getProfileView () {
-        return "/admin/profile";
-    }
+//    @GetMapping(value = "/admin/account/profile")
+//    public String getProfileView () {
+//        return "/admin/profile";
+//    }
     @GetMapping(value = "/admin/role")
-    public String getRoleView (Model model) throws Exception {
-        List<ResponseRole> apiResponse = adminService.getAllRole();
+    public String getRoleView (Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
+        List<ResponseRole> apiResponse = adminService.getAllRole(name);
+        model.addAttribute("name",name);
         model.addAttribute("listRole",apiResponse);
         return "/admin/role";
     }
+
+    @GetMapping(value = "/admin/role/addRole")
+    public String getAddRoleView (Model model) throws Exception {
+        model.addAttribute("role",new RequestRole());
+        return "/admin/addRole";
+    }
+
+    @PostMapping(value = "/admin/role/saveRole")
+    public String postSaveRole (RedirectAttributes redirectAttributes,Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
+        if(requestRole.getName().isEmpty()){
+            redirectAttributes.addFlashAttribute("mess","Name role is required");
+            redirectAttributes.addFlashAttribute("role",requestRole);
+            return "redirect:/admin/role/addRole";
+        }
+
+        ApiResponse<ResponseRole> apiResponse = adminService.addRole(requestRole);
+        if(apiResponse.getStatus() == StatusEnum.ERROR){
+            redirectAttributes.addFlashAttribute("mess","Name is exist");
+            return "redirect:/admin/role/addRole";
+        }
+
+        redirectAttributes.addFlashAttribute("mess","success");
+        return "redirect:/admin/role";
+    }
+
     @GetMapping(value = "/admin/role/detailRole/{id}")
     public String getDetailRoleView (Model model,@PathVariable int id) throws Exception {
         ApiResponse<ResponseRole> apiResponse = adminService.getRoleById(id);
         model.addAttribute("role",apiResponse.getPayload());
-        System.out.println(apiResponse.getPayload());
         return "/admin/detailRole";
     }
     @PostMapping(value = "/admin/role/editRole")
-    public String getEditRoleView (Model model, @RequestBody RequestRole requestRole) {
+    public String getEditRoleView (RedirectAttributes redirectAttributes,Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
         if(requestRole.getName().isEmpty()){
-            model.addAttribute("mess","Name role is required");
-            return "/admin/detailRole";
+            redirectAttributes.addFlashAttribute("mess","Name role is required");
+            redirectAttributes.addFlashAttribute("role",requestRole);
+            return "redirect:/admin/role/detailRole/"+requestRole.getId();
         }
-        return "/admin/detailRole";
+        ApiResponse<ResponseRole> apiResponse = adminService.editRole(requestRole);
+        if(apiResponse.getStatus() == StatusEnum.ERROR){
+            redirectAttributes.addFlashAttribute("mess","Name is exist");
+            return "redirect:/admin/role/detailRole/"+requestRole.getId();
+        }
+        redirectAttributes.addFlashAttribute("mess","success");
+        return "redirect:/admin/role/detailRole/"+requestRole.getId();
     }
     @GetMapping(value = "/admin/role/delete/{id}")
-    public String deleteRole (Model model, @PathVariable int id) throws Exception {
+    public String deleteRole (RedirectAttributes redirectAttributes, @PathVariable int id) throws Exception {
         ApiResponse<ResponseRole> apiResponse = adminService.deleteRoleById(id);
         if(apiResponse.getStatus() == StatusEnum.ERROR){
-            model.addAttribute("mess",apiResponse.getStatus());
+            redirectAttributes.addFlashAttribute("mess",apiResponse.getMessage());
         }else{
-            model.addAttribute("mess",apiResponse.getMessage());
+            redirectAttributes.addFlashAttribute("mess","success");
         }
-        return "/admin/role";
+        return "redirect:/admin/role";
     }
 
 }

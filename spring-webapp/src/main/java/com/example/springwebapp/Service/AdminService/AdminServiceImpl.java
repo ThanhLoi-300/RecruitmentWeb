@@ -4,6 +4,7 @@ package com.example.springwebapp.Service.AdminService;
 
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
+import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
@@ -67,10 +68,10 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public ApiResponse<ResponseAccount> loginAccount(RequestAccountLogin requestAccountLogin) throws Exception {
+    public ResponseAccount loginAccount(RequestAccountLogin requestAccountLogin) throws Exception {
         try {
             //ApiResponse response = restTemplate.getForObject(apiUrlLogin+"/account/login", ApiResponse.class);
-            return commonRestClient.post(apiUrlLogin+"/account/login", requestAccountLogin);
+            return commonRestClient.post(apiUrlLogin+"/account/login",ResponseAccount.class, requestAccountLogin);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -102,8 +103,8 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public List<ResponseRole> getAllRole() throws Exception {
-        return commonRestClient.getAll(apiUrl+"/role");
+    public List<ResponseRole> getAllRole(String name) throws Exception {
+        return commonRestClient.getAll(apiUrl+"/role?name="+name);
     }
     @Override
     public ApiResponse<ResponseRole> getRoleById(int id) throws Exception{
@@ -112,6 +113,16 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public ApiResponse<ResponseRole> deleteRoleById(int id) throws Exception{
         return commonRestClient.deleteByCondition(apiUrl+"/role",id);
+    }
+
+    @Override
+    public ApiResponse<ResponseRole> editRole(RequestRole requestRole) throws Exception {
+        return commonRestClient.put(apiUrl + "/role",requestRole,requestRole.getId());
+    }
+
+    @Override
+    public ApiResponse<ResponseRole> addRole(RequestRole requestRole) throws Exception {
+        return commonRestClient.post(apiUrl + "/role",requestRole);
     }
 
     @Override

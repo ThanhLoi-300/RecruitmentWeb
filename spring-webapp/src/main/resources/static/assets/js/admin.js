@@ -26,9 +26,8 @@ for(let i=0;i<btnQL.length;i++){
     })
 }
 
-function deleteItem(url,id){
-alert(id)
-console.log(url+id)
+    function deleteItem(id){
+        var itemId = id.getAttribute('data-id');
         Swal.fire({
                 title: 'Do you want to delete?',
                 icon: 'warning',
@@ -36,25 +35,30 @@ console.log(url+id)
                 confirmButtonText: 'Yes',
             }).then((result) => {
                 if (result.isConfirmed){
-                    //location.href = url+id
+                    window.location.href = '/admin/role/delete/' + itemId
                 }
             })
     }
 
 
-function warning() {
+function warning(mess) {
         let icon = '';
         let title = '';
         let text = '';
+
         if (mess == "Name role is required") {
             icon = 'warning'
             title = 'Oosp. Fail!!!'
-            text = 'Name role is required'
-        }else if(mess == "ERROR"){
+            text = "Name role is required"
+        }else if(mess == "This role can not be deleted because it has been used by some account"){
             icon = 'warning'
             title = 'Oosp. Fail!!!'
-            text = "This role can not be deleted because it has been used by some account"
-        }else{
+            text = mess
+        }else if(mess == "Name is exist"){
+            icon = 'warning'
+            title = 'Oosp. Fail!!!'
+           text = mess
+        }else if(mess == "success"){
             icon = 'success'
             title = 'Congratulation!!!!!'
             text = 'Success'
@@ -67,7 +71,6 @@ function warning() {
                 text: text
             })
 }
-    warning()
 
 
 

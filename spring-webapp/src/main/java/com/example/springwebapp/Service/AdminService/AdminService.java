@@ -2,6 +2,7 @@ package com.example.springwebapp.Service.AdminService;
 
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
+import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
@@ -20,7 +21,7 @@ public interface AdminService {
 //    int countMostPopularCategory () throws Exception;
 
     //===========================Admin=============================
-    ApiResponse<ResponseAccount> loginAccount(RequestAccountLogin requestAccountLogin) throws Exception;
+    ResponseAccount loginAccount(RequestAccountLogin requestAccountLogin) throws Exception;
     ResponseAdmin findById(int id);
     List<ResponseAdmin> findAll();
     List<ResponseAdmin> findByRole(String role);
@@ -41,7 +42,9 @@ public interface AdminService {
 //    void removeProfileById(int id) throws Exception;
 
     //====================Role====================
-    List<ResponseRole> getAllRole() throws Exception;
+    List<ResponseRole> getAllRole(String name) throws Exception;
     ApiResponse<ResponseRole> getRoleById(int id) throws Exception;
     ApiResponse<ResponseRole> deleteRoleById(int id) throws Exception;
+    ApiResponse<ResponseRole> editRole(RequestRole requestRole) throws Exception;
+    ApiResponse<ResponseRole> addRole(RequestRole requestRole) throws Exception;
 }

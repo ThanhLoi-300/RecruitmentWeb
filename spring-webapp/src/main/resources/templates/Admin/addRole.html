@@ -36,8 +36,7 @@
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <form class="forms-sample" action="/admin/role/editRole" enctype="multipart/form-data" th:object="${role}" method="post">
-                                    <input type="hidden" name="id" th:value="${role.id}">
+                                <form class="forms-sample" action="/admin/role/saveRole" enctype="multipart/form-data" th:object="${role}" method="post">
                                     <div class="form-group row">
                                         <label for="name" class="col-sm-3 col-form-label">RoleName</label>
                                         <div class="col-sm-9">

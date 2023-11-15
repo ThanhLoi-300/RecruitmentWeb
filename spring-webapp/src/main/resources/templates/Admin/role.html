@@ -35,6 +35,21 @@
                 </div>
                 <div class="activity-grid">
                     <div class="activity-card">
+                        <div class="activity-header row">
+                            <form class="forms-sample" style="width:40%;" action="/admin/role" enctype="multipart/form-data" method="get">
+                                <span style="margin-left:20px;" class="input-group input-group-sm">
+                                    <input type="text" placeholder="Search" name="name" class="form-control" th:value="${name}"/>
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-info btn-flat">Tìm kiếm</button>
+                                    </span>
+                                </span>
+                            </form>
+
+                            <span class="activity-more col-2 right" style="margin-left:400px;">
+                                <span class="mdi mdi-plus"></span>&nbsp;
+                                <a href="/admin/role/addRole" class="add">Thêm quyền</a>
+                            </span>
+                        </div>
                         <table class="table table_0">
                             <thead>
                             <tr>
@@ -45,11 +60,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="item : ${listRole}">
-                                <td>1</td>
+                            <tr th:each="item,index : ${listRole}">
+                                <td th:text="${index.count}"></td>
                                 <td th:text="${item.name}"></td>
                                 <td>
-                                    <span onclick="deleteItem('/admin/role/delete/', /*[[${item.id}]]*/)" class="btn btn-sm btn-danger"><i class="mdi mdi-close-octagon"></i></span>
+                                    <span th:attr="data-id=${item.id}" onclick="deleteItem(this)" class="btn btn-sm btn-danger"><i class="mdi mdi-close-octagon"></i></span>
                                 </td>
                                 <td> <a th:href="@{/admin/role/detailRole/{id}(id=${item.id})}">Xem chi tiết</a></td>
                             </tr>
@@ -75,6 +90,9 @@
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
 <script th:src="@{/assets/js/admin.js}"></script>
+<script>
+    warning(mess)
+</script>
 
 </body>
 </html>
