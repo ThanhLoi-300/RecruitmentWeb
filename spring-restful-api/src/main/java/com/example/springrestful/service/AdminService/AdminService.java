@@ -48,4 +48,8 @@ public interface AdminService {
 
     //===========================User=============================
     List<ResponseAccount> findAllUser (String userName, int page) throws Exception;
+
+    void changeStatus(int id) throws Exception;
+
+    ResponseAccount getAccountByUserName(String username) throws Exception;
 }

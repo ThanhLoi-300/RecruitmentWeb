@@ -6,7 +6,10 @@ package com.example.springwebapp.controller;/*
  * To change this template use File | Settings | File and Code Templates.
  */
 
+import com.example.springwebapp.model.Mapper.AccountMapper;
+import com.example.springwebapp.model.Mapper.JobMapper;
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
+import com.example.springwebapp.model.request.RequestChangeStatus.ResquestChangeStatus;
 import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ApiResponse.StatusEnum;
@@ -23,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,22 +40,6 @@ public class AdminListController {
 
     @Autowired
     AccountService accountService;
-
-    @GetMapping(value = "/admin/list")
-    public String findAll(Model model, @RequestParam(value = "role", required = false) String role) {
-        List<ResponseAccount> accountList = accountService.findAllAccounts();
-        List<ResponseAdmin> adminList = new ArrayList<>();
-
-        if (role == null) {
-            adminList = adminService.findAll();
-        } else {
-            adminList = adminService.findByRole(role);
-        }
-
-        model.addAttribute("accountList", accountList);
-        model.addAttribute("adminList", adminList);
-        return "/admin/admin_list";
-    }
 
     @GetMapping(value = "/admin/login")
     public String getLoginView () {
@@ -69,19 +57,29 @@ public class AdminListController {
                 model.addAttribute("mess", "login fail");
                 return "/admin/login";
             }else {
-                Admin.userName = account.getFullName();
-                Admin.nameRole = account.getRole_id().getName();
-                Admin.account_manage = account.getRole_id().getAccount_manage();
-                Admin.admin_manage = account.getRole_id().getAdmin_manage();
-                Admin.role_manage = account.getRole_id().getRole_manage();
-                model.addAttribute("admin", account);
-                return "redirect:/admin/index";
+                if(account.getRole().equals("Admin")){
+                    Admin.userName = account.getUsername();
+                    Admin.nameRole = account.getRole_id().getName();
+                    Admin.account_manage = account.getRole_id().getAccount_manage();
+                    Admin.admin_manage = account.getRole_id().getAdmin_manage();
+                    Admin.role_manage = account.getRole_id().getRole_manage();
+                    Admin.id = account.getId();
+                    model.addAttribute("admin", account);
+                    return "redirect:/admin/index";
+                }else{
+                    model.addAttribute("mess", "Is not Admin");
+                    return "/admin/login";
+                }
             }
         }
     }
 
     @GetMapping(value = "/admin/index")
-    public String getIndexView () {
+    public String getIndexView (Model model) {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
         return "/admin/index";
     }
     @GetMapping(value = "/admin/account")
@@ -90,7 +88,15 @@ public class AdminListController {
         return "/admin/account";
     }
     @GetMapping(value = "/admin/role")
-    public String getRoleView (Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
+    public String getRoleView (RedirectAttributes redirectAttributes, Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+        if(Admin.role_manage == 0){
+            redirectAttributes.addFlashAttribute("mess","Bạn không có quyền sử dụng chức năng này");
+            return "redirect:/admin/index";
+        }
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
+
         List<ResponseRole> apiResponse = adminService.getAllRole(name);
         model.addAttribute("name",name);
         model.addAttribute("listRole",apiResponse);
@@ -99,6 +105,10 @@ public class AdminListController {
 
     @GetMapping(value = "/admin/role/addRole")
     public String getAddRoleView (Model model) throws Exception {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
         model.addAttribute("role",new RequestRole());
         return "/admin/addRole";
     }
@@ -108,21 +118,31 @@ public class AdminListController {
         if(requestRole.getName().isEmpty()){
             redirectAttributes.addFlashAttribute("mess","Name role is required");
             redirectAttributes.addFlashAttribute("role",requestRole);
+            redirectAttributes.addFlashAttribute("username", username());
+            redirectAttributes.addFlashAttribute("roleName", role());
             return "redirect:/admin/role/addRole";
         }
 
         ApiResponse<ResponseRole> apiResponse = adminService.addRole(requestRole);
         if(apiResponse.getStatus() == StatusEnum.ERROR){
             redirectAttributes.addFlashAttribute("mess","Name is exist");
+            redirectAttributes.addFlashAttribute("username", username());
+            redirectAttributes.addFlashAttribute("roleName", role());
             return "redirect:/admin/role/addRole";
         }
 
         redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/role";
     }
 
     @GetMapping(value = "/admin/role/detailRole/{id}")
     public String getDetailRoleView (Model model,@PathVariable int id) throws Exception {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
+
         ApiResponse<ResponseRole> apiResponse = adminService.getRoleById(id);
         model.addAttribute("role",apiResponse.getPayload());
         return "/admin/detailRole";
@@ -132,14 +152,21 @@ public class AdminListController {
         if(requestRole.getName().isEmpty()){
             redirectAttributes.addFlashAttribute("mess","Name role is required");
             redirectAttributes.addFlashAttribute("role",requestRole);
+            redirectAttributes.addFlashAttribute("username", username());
+            redirectAttributes.addFlashAttribute("roleName", role());
             return "redirect:/admin/role/detailRole/"+requestRole.getId();
         }
         ApiResponse<ResponseRole> apiResponse = adminService.editRole(requestRole);
+        System.out.println(apiResponse);
         if(apiResponse.getStatus() == StatusEnum.ERROR){
+            redirectAttributes.addFlashAttribute("username", username());
+            redirectAttributes.addFlashAttribute("roleName", role());
             redirectAttributes.addFlashAttribute("mess","Name is exist");
             return "redirect:/admin/role/detailRole/"+requestRole.getId();
         }
         redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/role/detailRole/"+requestRole.getId();
     }
     @GetMapping(value = "/admin/role/delete/{id}")
@@ -150,13 +177,23 @@ public class AdminListController {
         }else{
             redirectAttributes.addFlashAttribute("mess","success");
         }
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/role";
     }
 
     //+++++++++++++++++++++++++Account++++++++++++++++++++++++++++++++++++++
     //+++++++++++++++++++++++++++User+++++++++++++++++++++++++++++++++++++++
     @GetMapping(value = "/admin/accountUser")
-    public String getAccountUserView (Model model, @RequestParam(value = "userName") String userName, @RequestParam(value = "page") int page) throws Exception {
+    public String getAccountUserView (RedirectAttributes redirectAttributes,Model model, @RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "page") int page) throws Exception {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+        if(Admin.account_manage == 0){
+            redirectAttributes.addFlashAttribute("username", username());
+            redirectAttributes.addFlashAttribute("roleName", role());
+            redirectAttributes.addFlashAttribute("mess","Bạn không có quyền sử dụng chức năng này");
+            return "redirect:/admin/index";
+        }
+
         List<ResponseAccount> apiResponse = adminService.getAllUser(userName, page);
 
         int pageSize = 3;
@@ -169,13 +206,59 @@ public class AdminListController {
         model.addAttribute("listUser",apiResponse);
         model.addAttribute("totalPage",totalPage);
         model.addAttribute("page",page);
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
         return "/admin/accountUser";
     }
 
+    @GetMapping(value = "/admin/profile")
+    public String getProfileView (Model model, @RequestParam(value = "username") String username) throws Exception {
+        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
 
-    @GetMapping(value = "/admin/account/profile")
-    public String getProfileView () {
+        ApiResponse<ResponseAccount> apiResponse = adminService.getAccountByUserName(username);
+        ResponseAccount account = AccountMapper.toResponseAccount(apiResponse.getPayload());
+        System.out.println(account);
+        //model.addAttribute("account", account);
+        model.addAttribute("username", username());
+        model.addAttribute("roleName", role());
         return "/admin/profile";
     }
 
+    @PostMapping(value = "/admin/account/editProfile")
+    public String editProfile (RedirectAttributes redirectAttributes, Model model, @RequestBody ResponseAccount account) throws Exception {
+
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("account", account);
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("roleName", role());
+        return "redirect:/admin/profile?username=" + account.getUsername();
+    }
+
+    @GetMapping(value = "/admin/account/changeStatus")
+    public String changeStatus (RedirectAttributes redirectAttributes, @RequestParam(value = "userName") String userName, @RequestParam(value = "page") int page,@RequestParam(value = "id") int id) throws Exception {
+        userName = adminService.changeStatus(id);
+        redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("username", username());
+        redirectAttributes.addFlashAttribute("roleName", role());
+        return "redirect:/admin/accountUser?userName="+userName+"&page="+page;
+    }
+
+    @GetMapping(value = "/admin/logout")
+    public String logout () throws Exception {
+        Admin.id = -1;
+        Admin.userName = "";
+        Admin.nameRole = "";
+        Admin.account_manage = 0;
+        Admin.admin_manage = 0;
+        Admin.role_manage = 0;
+        return "redirect:/admin/login";
+    }
+
+    public String username(){
+        return Admin.userName;
+    }
+
+    public String role(){
+        return Admin.nameRole;
+    }
 }

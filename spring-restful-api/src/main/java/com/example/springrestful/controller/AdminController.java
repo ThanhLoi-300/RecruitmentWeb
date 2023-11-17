@@ -4,10 +4,12 @@ import com.example.springrestful.exception.ApplicationException;
 import com.example.springrestful.exception.NotFoundException;
 import com.example.springrestful.exception.ValidationException;
 import com.example.springrestful.model.entity.Role.Role;
+import com.example.springrestful.model.mapper.AccountMapper;
 import com.example.springrestful.model.mapper.AdminMapper;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountEdit;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountRegister;
 import com.example.springrestful.model.request.RequestAdmin.RequestAdmin;
+import com.example.springrestful.model.request.RequestChangeStatus.RequestChangeStatus;
 import com.example.springrestful.model.response.ApiResponse.ApiResponse;
 import com.example.springrestful.model.response.ApiResponse.StatusEnum;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
@@ -43,6 +45,8 @@ public class AdminController {
     AdminService adminService;
     @Autowired
     ValidatorUtil validatorUtil;
+    @Autowired
+    AccountMapper accountMapper;
 
     //++++++++++++++++++++++++++++++User+++++++++++++++++++++++++++++++
     @GetMapping(value = "/accountUser")
@@ -50,6 +54,30 @@ public class AdminController {
         try {
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.ok(adminService.findAllUser(userName,page));
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
+
+    @PostMapping(value = "/accountUser/changeStatus")
+    public ResponseEntity<ApiResponse<String>> changeStatus(@RequestBody RequestChangeStatus requestChangeStatus) throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+
+            adminService.changeStatus(requestChangeStatus.getId());
+            apiResponse.ok(accountMapper.toResponseAccount(accountService.findById(requestChangeStatus.getId())).getUsername());
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
+
+    @GetMapping(value = "/getAccountByUserName/{username}")
+    public ResponseEntity<ApiResponse<ResponseAccount>> getAccountByUserName(@PathVariable String username) throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.ok(adminService.getAccountByUserName(username));
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage()); // Handle other exceptions
@@ -279,18 +307,18 @@ public ResponseEntity<ApiResponse<List<Role>>> returnRoleById(@PathVariable int 
         }
     }
 
-    @PutMapping("/role")
+    @PostMapping("/role/editRole")
     public ResponseEntity<ApiResponse<Role>> editRole(@Valid @RequestBody Role requestRole, BindingResult bindingResult) throws Exception {
         try {
             ApiResponse apiResponse = new ApiResponse();
 
-            accountRegisterValidator.validateEdit(requestRole, bindingResult);
-
-            if (bindingResult.hasErrors()) {
-                Map<String, String> validationErrors = validatorUtil.toErrors(bindingResult.getFieldErrors());
-                throw new ValidationException(validationErrors);
+            //accountRegisterValidator.validateEdit(requestRole, bindingResult);
+            int rs = adminService.checkRoleExisted(requestRole.getId(),requestRole.getName());
+            if (rs > 0) {
+                apiResponse.error("This name is exist");
+                return new ResponseEntity<>(apiResponse, HttpStatus.OK);
             }
-            System.out.println(adminService.editRole(requestRole));
+
             apiResponse.ok(adminService.editRole(requestRole));
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (NotFoundException ex) {

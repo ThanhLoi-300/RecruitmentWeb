@@ -3,7 +3,9 @@ package com.example.springrestful.repository;
 import com.example.springrestful.model.entity.Account.Account;
 import com.example.springrestful.model.entity.Admin.Admin;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,11 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     @Query(value = "SELECT a FROM Account a WHERE a.role <> 'Admin'")
     List<Account> getAllUser();
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Account a SET a.status = CASE WHEN a.status = 1 THEN 0 ELSE 1 END WHERE a.id = :id")
+    void changeStatus(int id);
+
 
 }

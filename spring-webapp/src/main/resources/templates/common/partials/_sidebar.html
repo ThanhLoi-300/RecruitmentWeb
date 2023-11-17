@@ -1,11 +1,5 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <script th:inline="javascript">
-<!--    var admin = /*[[${admin}]]*/ '';-->
-    console.log("admin",admin)
-  </script>
-</head>
 <body>
 <nav th:fragment="sidebar" class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
@@ -17,8 +11,8 @@
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column">
-          <span class="font-weight-bold mb-2">David Grey. H</span>
-          <span class="text-secondary text-small">Project Manager</span>
+          <span class="font-weight-bold mb-2" th:text="${username}">David Grey. H</span>
+          <span class="text-secondary text-small" th:text="${roleName}"></span>
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
       </a>
@@ -39,13 +33,18 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/admin/role">
+      <a class="nav-link" href="/admin/role?name=">
         <span class="menu-title">Role</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/admin/chart">
-        <span class="menu-title">Charts</span>
+      <a class="nav-link" th:href="@{/admin/profile?username={username}(username=${username})}">
+        <span class="menu-title">Profile</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/logout">
+        <span class="menu-title">Logout</span>
       </a>
     </li>
   </ul>

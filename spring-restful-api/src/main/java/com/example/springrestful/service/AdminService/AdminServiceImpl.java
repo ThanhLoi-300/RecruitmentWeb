@@ -240,4 +240,14 @@ public class AdminServiceImpl implements AdminService{
         else list = accountRepository.getAllUser(userName);
         return accountMapper.toResponseAccountList(list);
     }
+
+    @Override
+    public void changeStatus(int id) throws Exception {
+        accountRepository.changeStatus(id);
+    }
+
+    @Override
+    public ResponseAccount getAccountByUserName(String username) throws Exception {
+        return accountMapper.toResponseAccount(accountRepository.findByUsername(username));
+    }
 }

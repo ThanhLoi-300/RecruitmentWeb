@@ -62,6 +62,10 @@ function warning(mess) {
             icon = 'success'
             title = 'Congratulation!!!!!'
             text = 'Success'
+        }else if(mess == "Bạn không có quyền sử dụng chức năng này"){
+            icon = 'warning'
+            title = 'Oosp. Fail!!!'
+            text = mess
         }
 
         if (icon != '' && title != '' && text != '')
@@ -72,5 +76,35 @@ function warning(mess) {
             })
 }
 
+function banNick(id){
+    var itemId = id.getAttribute('data-id');
+    var page = id.getAttribute('data-page');
+    var userName = id.getAttribute('data-userName');
+    var data = {
+        id : itemId, page: page, userName: userName
+    }
+            Swal.fire({
+                title: 'Do you want to change status?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+            }).then((result) => {
+                if (result.isConfirmed){
+                    window.location.href = '/admin/account/changeStatus?id=' + parseInt(itemId)+'&userName='+userName+'&page='+parseInt(page)
+//                    $.ajax({
+//                            type: "POST", // hoặc "GET" tùy thuộc vào phương thức bạn muốn sử dụng
+//                            url: "/admin/account/changeStatus",
+//                            contentType: "application/json",
+//                            data: JSON.stringify(data),
+//                            success: function(response) {
+//                                //window.location.href = "/admin/accountUser?useName="+userName+"?page="+page
+//                            },
+//                            error: function(error) {
+//                                console.error(error);
+//                            }
+//                        });
+                }
+            })
+}
 
 

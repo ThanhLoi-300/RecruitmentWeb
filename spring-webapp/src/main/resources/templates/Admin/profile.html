@@ -36,45 +36,52 @@
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <form class="forms-sample">
+                                <form class="forms-sample" action="/admin/account/editAccount" enctype="multipart/form-data" th:object="${account}" method="post">
+                                    <input type="hidden" name="id" th:value="${account.id}"/>
                                     <div class="form-group row">
                                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                                         <div class="col-sm-9">
-                                            <input type="email" readonly name="email" class="form-control" id="email" placeholder="Email">
+                                            <input type="email" readonly name="email" class="form-control" id="email" placeholder="Email" th:value="${account.email}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="fullName" class="col-sm-3 col-form-label">FullName</label>
                                         <div class="col-sm-9">
-                                            <input type="email" class="form-control" name="fullName" id="fullName" placeholder="FullName">
+                                            <input type="email" class="form-control" name="fullName" id="fullName" placeholder="FullName" th:value="${account.fullName}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="phoneNumber" class="col-sm-3 col-form-label">Mobile</label>
                                         <div class="col-sm-9">
-                                            <input type="number" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Mobile number">
+                                            <input type="number" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Mobile number" th:value="${account.phoneNumber}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="address" class="col-sm-3 col-form-label">Address</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="address" class="form-control" id="address" placeholder="Address">
+                                            <input type="text" name="address" class="form-control" id="address" placeholder="Address" th:value="${account.address}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="education" class="col-sm-3 col-form-label">Education</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="education" class="form-control" id="education" placeholder="Education">
+                                            <input type="text" name="education" class="form-control" id="education" placeholder="Education" th:value="${account.education}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="description" class="col-sm-3 col-form-label">Description</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="description" class="form-control" id="description" placeholder="Description">
+                                            <input type="text" name="description" class="form-control" id="description" placeholder="Description" th:value="${account.description}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="role_id" class="col-sm-3 col-form-label">Role</label>
+                                        <label for="role" class="col-sm-3 col-form-label">Role</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="role" class="form-control" id="role" placeholder="Role" readonly th:value="${account.role}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" th:unless="${account.role == 'Admin'}">
+                                        <label for="role_id" class="col-sm-3 col-form-label">RoleName</label>
                                         <div class="col-sm-9">
                                             <select id="role_id" name="role_id">
                                                 <option value="volvo">Volvo</option>
@@ -85,7 +92,7 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                                    <a href="/admin/account" class="btn btn-light" >Cancel</a>
+<!--                                    <a href="/admin/account" class="btn btn-light" >Cancel</a>-->
                                 </form>
                             </div>
                         </div>

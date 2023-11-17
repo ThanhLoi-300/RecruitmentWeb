@@ -34,7 +34,7 @@
                 </div>
                 <div class="activity-grid">
                     <div class="activity-card">
-                        <div class="activity-header row mb-10">
+                        <div class="activity-header row" style="margin-bottom:10px;">
                             <form class="forms-sample" style="width:40%;" action="/admin/accountUser" enctype="multipart/form-data" method="get">
                                 <span style="margin-left:20px;" class="input-group input-group-sm">
                                     <input type="text" placeholder="Search" name="userName" class="form-control" th:value="${userName}"/>
@@ -55,7 +55,7 @@
                             <tr>
                                 <th>STT</th>
                                 <th>UserName</th>
-                                <th>FullName</th>
+                                <th>Role</th>
                                 <th>Email</th>
                                 <th>Active</th>
                                 <th style="width:500px;">Action</th>
@@ -65,16 +65,13 @@
                                 <tr th:each="item,index : ${listUser}">
                                     <td th:text="${index.count}"></td>
                                     <td th:text="${item.username}"></td>
-                                    <td th:text="${item.fullName}"> </td>
+                                    <td th:text="${item.role}"> </td>
                                     <td th:text="${item.email}"> </td>
-                                    <td>
-                                        <span th:attr="data-id=${item.id}" onclick="banNick(this)" class="btn btn-sm btn-danger"><i class="mdi mdi-like"></i></span>
+                                    <td th:switch="${item.status}" class="text-center" th:data-id="${item.id}" th:data-userName="${userName}" th:data-page="${page}"onClick="banNick(this)">
+                                        <span class="badge badge-success" th:case=0>Active</span>
+                                        <span class="badge badge-danger" th:case=1>Inactive</span>
                                     </td>
-                                    <td th:switch="${item.status}" class="text-center" th:data-id="${item.id}">
-                                        <span class="badge badge-success" th:case=1>Active</span>
-                                        <span class="badge badge-danger" th:case=0>Inactive</span>
-                                    </td>
-                                    <td> <a href="/admin/account/profile">Xem chi tiết</a> </td>
+                                    <td> <a th:href="@{/admin/profile?username={username}(username=${item.username})}">Chi tiết</a> </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -115,6 +112,7 @@
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
 <script th:src="@{/assets/js/admin.js}"></script>
+<script th:src="@{/assets/js/jquery.min.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js"></script>
 <script>
     warning(mess)

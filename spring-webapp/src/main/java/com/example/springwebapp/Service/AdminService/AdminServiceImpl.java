@@ -4,6 +4,7 @@ package com.example.springwebapp.Service.AdminService;
 
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
+import com.example.springwebapp.model.request.RequestChangeStatus.ResquestChangeStatus;
 import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
@@ -12,12 +13,17 @@ import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import com.example.springwebapp.restapi.CommonRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -117,7 +123,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public ApiResponse<ResponseRole> editRole(RequestRole requestRole) throws Exception {
-        return commonRestClient.put(apiUrl + "/role",requestRole,requestRole.getId());
+        return commonRestClient.post(apiUrl + "/role/editRole", requestRole);
     }
 
     @Override
@@ -128,6 +134,31 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<ResponseAccount> getAllUser(String userName, int page) throws Exception {
         return commonRestClient.getAll(apiUrl+"/accountUser?userName="+userName+"&page="+page);
+    }
+
+    @Override
+    public String changeStatus(int id) throws Exception {
+        ResquestChangeStatus rq = new ResquestChangeStatus();
+        rq.setId(id);
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        HttpEntity<ResquestChangeStatus> requestEntity = new HttpEntity<>(rq, headers);
+
+        ResponseEntity<ApiResponse> responseEntity = restTemplate.exchange(
+                apiUrl + "/accountUser/changeStatus",
+                HttpMethod.POST,
+                requestEntity,
+                ApiResponse.class);
+        System.out.println(Objects.requireNonNull(responseEntity.getBody()).getPayload());
+        return Objects.requireNonNull(responseEntity.getBody()).getPayload().toString();
+    }
+
+    @Override
+    public ApiResponse<ResponseAccount> getAccountByUserName(String username) throws Exception {
+        return commonRestClient.getByConditionUnique(apiUrl+"/getAccountByUserName",username);
     }
 
     @Override

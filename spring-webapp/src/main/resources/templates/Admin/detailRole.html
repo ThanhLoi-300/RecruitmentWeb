@@ -83,8 +83,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                                    <a href="/admin/role" class="btn btn-light">Cancel</a>
+                                    <button type="submit" class="btn btn-gradient-primary me-2" th:attr="disabled=${role.id == 2}">Submit</button>
+                                    <a href="/admin/role?name=" class="btn btn-light">Cancel</a>
                                 </form>
                             </div>
                         </div>

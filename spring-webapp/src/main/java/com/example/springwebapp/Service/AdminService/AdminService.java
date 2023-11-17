@@ -7,6 +7,7 @@ import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
 import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -50,4 +51,6 @@ public interface AdminService {
 
     //====================User====================
     List<ResponseAccount> getAllUser(String userName, int page) throws Exception;
+    String changeStatus(int id) throws Exception;
+    ApiResponse<ResponseAccount> getAccountByUserName(String username)throws Exception;
 }

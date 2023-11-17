@@ -64,7 +64,7 @@
                                 <td th:text="${index.count}"></td>
                                 <td th:text="${item.name}"></td>
                                 <td>
-                                    <span th:attr="data-id=${item.id}" onclick="deleteItem(this)" class="btn btn-sm btn-danger"><i class="mdi mdi-close-octagon"></i></span>
+                                    <span th:unless="${item.id == 2}" th:attr="data-id=${item.id}" onclick="deleteItem(this)" class="btn btn-sm btn-danger"><i class="mdi mdi-close-octagon"></i></span>
                                 </td>
                                 <td> <a th:href="@{/admin/role/detailRole/{id}(id=${item.id})}">Xem chi tiết</a></td>
                             </tr>
