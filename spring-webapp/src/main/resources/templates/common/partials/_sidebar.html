@@ -11,7 +11,7 @@
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column">
-          <span class="font-weight-bold mb-2" th:text="${username}">David Grey. H</span>
+          <span class="font-weight-bold mb-2" th:text="${username}"></span>
           <span class="text-secondary text-small" th:text="${roleName}"></span>
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
@@ -23,12 +23,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/admin/accountUser?userName=&page=1">
+      <a class="nav-link" href="/admin/accountUser?search=&page=1">
         <span class="menu-title">Account User</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/admin/accountAdmin?userName=&page=1">
+      <a class="nav-link" href="/admin/accountAdmin?search=&page=1">
         <span class="menu-title">Account Admin</span>
       </a>
     </li>
@@ -38,10 +38,15 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" th:href="@{/admin/profile?username={username}(username=${username})}">
-        <span class="menu-title">Profile</span>
+      <a class="nav-link" href="/admin/ChangeToRecruiter?page=1">
+        <span class="menu-title">Change To Recruiter</span>
       </a>
     </li>
+<!--    <li class="nav-item">-->
+<!--      <a class="nav-link" th:href="@{/admin/profile?action=1&username={username}(username=${username})}">-->
+<!--        <span class="menu-title">Profile</span>-->
+<!--      </a>-->
+<!--    </li>-->
     <li class="nav-item">
       <a class="nav-link" href="/admin/logout">
         <span class="menu-title">Logout</span>

@@ -53,4 +53,5 @@ public interface AdminService {
     List<ResponseAccount> getAllUser(String userName, int page) throws Exception;
     String changeStatus(int id) throws Exception;
     ApiResponse<ResponseAccount> getAccountByUserName(String username)throws Exception;
+    List<ResponseAccount> getAllAdmin(String userName, int page) throws Exception;
 }

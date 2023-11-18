@@ -81,7 +81,7 @@ function banNick(id){
     var page = id.getAttribute('data-page');
     var userName = id.getAttribute('data-userName');
     var data = {
-        id : itemId, page: page, userName: userName
+        id : itemId, page: page, search: userName
     }
             Swal.fire({
                 title: 'Do you want to change status?',
@@ -90,7 +90,7 @@ function banNick(id){
                 confirmButtonText: 'Yes',
             }).then((result) => {
                 if (result.isConfirmed){
-                    window.location.href = '/admin/account/changeStatus?id=' + parseInt(itemId)+'&userName='+userName+'&page='+parseInt(page)
+                    window.location.href = '/admin/account/changeStatus?id=' + parseInt(itemId)+'&search='+userName+'&page='+parseInt(page)
 //                    $.ajax({
 //                            type: "POST", // hoặc "GET" tùy thuộc vào phương thức bạn muốn sử dụng
 //                            url: "/admin/account/changeStatus",
@@ -103,6 +103,25 @@ function banNick(id){
 //                                console.error(error);
 //                            }
 //                        });
+                }
+            })
+}
+
+function banNickAdmin(id){
+    var itemId = id.getAttribute('data-id');
+    var page = id.getAttribute('data-page');
+    var userName = id.getAttribute('data-userName');
+    var data = {
+        id : itemId, page: page, search: userName
+    }
+            Swal.fire({
+                title: 'Do you want to change status?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+            }).then((result) => {
+                if (result.isConfirmed){
+                    window.location.href = '/admin/account/changeStatusAdmin?id=' + parseInt(itemId)+'&search='+userName+'&page='+parseInt(page)
                 }
             })
 }

@@ -250,4 +250,12 @@ public class AdminServiceImpl implements AdminService{
     public ResponseAccount getAccountByUserName(String username) throws Exception {
         return accountMapper.toResponseAccount(accountRepository.findByUsername(username));
     }
+
+    @Override
+    public List<ResponseAccount> findAllAdmin(String userName, int page) throws Exception {
+        List<Account> list = null;
+        if(userName.isEmpty() || userName == null) list = accountRepository.getAllAdmin();
+        else list = accountRepository.getAllAdmin(userName);
+        return accountMapper.toResponseAccountList(list);
+    }
 }

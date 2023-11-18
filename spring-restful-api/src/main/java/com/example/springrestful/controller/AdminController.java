@@ -84,6 +84,18 @@ public class AdminController {
         }
     }
 
+    //+++++++++++++++++++++++++++++++++++++++++Admin+++++++++++++++++++++++++++++++++++++++
+    @GetMapping(value = "/accountAdmin")
+    public ResponseEntity<ApiResponse<List<ResponseAccount>>> getAllAdmin(@RequestParam(value = "userName") String userName, @RequestParam(value = "page") int page) throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.ok(adminService.findAllAdmin(userName,page));
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
+
 //    @GetMapping(value = {"","/list"})
 //    public ResponseEntity<List<ResponseAdmin>> getAllAdmin(@RequestParam(value = "role", required = false) String role) throws Exception {
 //        List<Admin> adminList = null;

@@ -27,6 +27,13 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query(value = "SELECT a FROM Account a WHERE a.role <> 'Admin'")
     List<Account> getAllUser();
 
+    @Query(value = "SELECT a FROM Account a WHERE a.username LIKE %:userName% AND a.role = 'Admin'")
+    List<Account> getAllAdmin(@Param("userName") String userName);
+
+    @Query(value = "SELECT a FROM Account a WHERE a.role = 'Admin'")
+    List<Account> getAllAdmin();
+
+
     @Transactional
     @Modifying
     @Query("UPDATE Account a SET a.status = CASE WHEN a.status = 1 THEN 0 ELSE 1 END WHERE a.id = :id")

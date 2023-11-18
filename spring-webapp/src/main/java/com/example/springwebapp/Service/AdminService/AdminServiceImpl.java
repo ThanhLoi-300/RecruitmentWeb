@@ -162,6 +162,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public List<ResponseAccount> getAllAdmin(String userName, int page) throws Exception {
+        return commonRestClient.getAll(apiUrl+"/accountAdmin?userName="+userName+"&page="+page);
+    }
+
+    @Override
     public ApiResponse<ResponseAdmin> update(RequestAdmin admin) {
         try {
             ApiResponse response = commonRestClient.put(apiUrl+"/form", ApiResponse.class, admin);

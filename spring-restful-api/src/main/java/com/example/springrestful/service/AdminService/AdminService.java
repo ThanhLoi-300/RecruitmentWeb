@@ -52,4 +52,7 @@ public interface AdminService {
     void changeStatus(int id) throws Exception;
 
     ResponseAccount getAccountByUserName(String username) throws Exception;
+
+    //===========================Admin=============================
+    List<ResponseAccount> findAllAdmin (String userName, int page) throws Exception;
 }

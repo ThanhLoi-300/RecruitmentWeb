@@ -80,18 +80,16 @@
                                             <input type="text" name="role" class="form-control" id="role" placeholder="Role" readonly th:value="${account.role}">
                                         </div>
                                     </div>
-                                    <div class="form-group row" th:unless="${account.role == 'Admin'}">
+                                    <div class="form-group row" th:unless="${action != 1}">
                                         <label for="role_id" class="col-sm-3 col-form-label">RoleName</label>
                                         <div class="col-sm-9">
                                             <select id="role_id" name="role_id">
-                                                <option value="volvo">Volvo</option>
-                                                <option value="saab">Saab</option>
-                                                <option value="mercedes">Mercedes</option>
-                                                <option value="audi">Audi</option>
+                                                <option th:value="${account.role_id.id}" th:text="${account.role_id.name}"></option>
+                                                <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
                                             </select>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+<!--                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>-->
 <!--                                    <a href="/admin/account" class="btn btn-light" >Cancel</a>-->
                                 </form>
                             </div>
