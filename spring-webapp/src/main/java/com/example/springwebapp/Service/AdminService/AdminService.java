@@ -1,6 +1,7 @@
 package com.example.springwebapp.Service.AdminService;
 
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountRegister;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
 import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
@@ -54,4 +55,7 @@ public interface AdminService {
     String changeStatus(int id) throws Exception;
     ApiResponse<ResponseAccount> getAccountByUserName(String username)throws Exception;
     List<ResponseAccount> getAllAdmin(String userName, int page) throws Exception;
+    String sendOTP(String mail);
+    String findByUsername(String username);
+    void createAdmin(RequestAccountRegister requestAccountRegister);
 }

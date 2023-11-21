@@ -3,6 +3,7 @@ package com.example.springwebapp.Service.AdminService;
 
 
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountRegister;
 import com.example.springwebapp.model.request.RequestAdmin.RequestAdmin;
 import com.example.springwebapp.model.request.RequestChangeStatus.ResquestChangeStatus;
 import com.example.springwebapp.model.request.RequestRole.RequestRole;
@@ -187,5 +188,24 @@ public class AdminServiceImpl implements AdminService{
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    @Override
+    public String sendOTP(String mail) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", mail);
+        return commonRestClient.get(apiUrl+"/sendOTP",ApiResponse.class, params).getPayload().toString();
+    }
+
+    @Override
+    public String findByUsername(String username) {
+        Map<String, String> params = new HashMap<>();
+        params.put("username", username);
+        return commonRestClient.get(apiUrl+"/findUserName",ApiResponse.class, params).getPayload().toString();
+    }
+
+    @Override
+    public void createAdmin(RequestAccountRegister requestAccountRegister) {
+        commonRestClient.post(apiUrl+"/createAdmin",requestAccountRegister);
     }
 }

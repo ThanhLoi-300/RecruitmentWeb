@@ -6,14 +6,18 @@ import com.example.springrestful.model.entity.UserLogin.UserLogin;
 import com.example.springrestful.model.mapper.AccountMapper;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountEdit;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountRegister;
+import com.example.springrestful.model.request.RequestAccount.RequestRegisterOTP;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.repository.AccountRepository;
 import com.example.springrestful.repository.AccountRoleRepository;
 import com.example.springrestful.repository.UserLoginRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -32,6 +36,8 @@ public class AccountServiceImpl implements AccountService{
     AccountRoleRepository accountRoleRepository;
     @Autowired
     UserLoginRepository userLoginRepository;
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @Override
     public ResponseAccount saveAccount(RequestAccountRegister account) throws Exception {
@@ -136,4 +142,36 @@ public class AccountServiceImpl implements AccountService{
         }
         return null;
     }
+
+    @Override
+    public String sendOtp(String email) {
+        System.out.println("accountRepository.findByEmail(email) "+accountRepository.existsByEmail(email));
+        if(accountRepository.existsByEmail(email)){
+            return "Email đã được sử dụng";
+        }
+        String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int OTP_LENGTH = 6;
+        StringBuilder otp = new StringBuilder();
+
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < OTP_LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            otp.append(CHARACTERS.charAt(index));
+        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("OTP Verification");
+        message.setText("Your OTP is: " + otp);
+        javaMailSender.send(message);
+        return otp.toString();
+    }
+
+    @Override
+    public String findUsername(String username) throws Exception {
+        boolean account = accountRepository.existsByUsername(username);
+        if(account) return "Username đã tồn tại";
+        return "";
+    }
+
 }

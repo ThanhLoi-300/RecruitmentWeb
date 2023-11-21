@@ -21,6 +21,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 //    List<Account> findByRoleWithJPQL(@Param("id") int id);
 
     boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
     @Query(value = "SELECT a FROM Account a WHERE a.username LIKE %:userName% AND a.role <> 'Admin'")
     List<Account> getAllUser(@Param("userName") String userName);
 

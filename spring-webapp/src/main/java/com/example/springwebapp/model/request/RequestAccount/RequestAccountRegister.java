@@ -1,5 +1,6 @@
 package com.example.springwebapp.model.request.RequestAccount;
 
+import com.example.springwebapp.model.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class RequestAccountRegister {
 //    @NotEmpty(message = "Role is required")
 //    @Min(value = 1,message = "Role have value have to >0")
     private String role;
+    private int role_id;
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Invalid email format")

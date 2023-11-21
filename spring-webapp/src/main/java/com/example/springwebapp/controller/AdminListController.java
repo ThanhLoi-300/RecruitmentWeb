@@ -10,6 +10,7 @@ import com.example.springwebapp.model.Mapper.AccountMapper;
 import com.example.springwebapp.model.Mapper.JobMapper;
 import com.example.springwebapp.model.model.Pager;
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
+import com.example.springwebapp.model.request.RequestAccount.RequestAccountRegister;
 import com.example.springwebapp.model.request.RequestChangeStatus.ResquestChangeStatus;
 import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
@@ -21,14 +22,14 @@ import com.example.springwebapp.Service.AdminService.AdminService;
 import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.security.SecureRandom;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.springwebapp.model.Static.Admin;
@@ -43,22 +44,23 @@ public class AdminListController {
     AccountService accountService;
 
     @GetMapping(value = "/admin/login")
-    public String getLoginView () {
+    public String getLoginView() {
         return "/admin/login";
     }
+
     @PostMapping(value = "/admin/login")
-    public String checkLoginView (@ModelAttribute("requestAccountLogin") @Valid RequestAccountLogin requestAccountLogin, BindingResult bindingResult, Model model) throws Exception{
+    public String checkLoginView(@ModelAttribute("requestAccountLogin") @Valid RequestAccountLogin requestAccountLogin, BindingResult bindingResult, Model model) throws Exception {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mess", "login fail");
             return "/admin/login";
-        }else{
+        } else {
             requestAccountLogin.setIsAdmin(1);
             ResponseAccount account = adminService.loginAccount(requestAccountLogin);
-            if(account == null){
+            if (account == null) {
                 model.addAttribute("mess", "login fail");
                 return "/admin/login";
-            }else {
-                if(account.getRole().equals("Admin")){
+            } else {
+                if (account.getRole().equals("Admin")) {
                     Admin.userName = account.getUsername();
                     Admin.nameRole = account.getRole_id().getName();
                     Admin.account_manage = account.getRole_id().getAccount_manage();
@@ -67,7 +69,7 @@ public class AdminListController {
                     Admin.id = account.getId();
                     model.addAttribute("admin", account);
                     return "redirect:/admin/index";
-                }else{
+                } else {
                     model.addAttribute("mess", "Is not Admin");
                     return "/admin/login";
                 }
@@ -76,122 +78,125 @@ public class AdminListController {
     }
 
     @GetMapping(value = "/admin/index")
-    public String getIndexView (Model model) {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+    public String getIndexView(Model model) {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
 
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
         return "/admin/index";
     }
+
     @GetMapping(value = "/admin/account")
-    public String getAccountView () {
+    public String getAccountView() {
 
         return "/admin/account";
     }
+
     @GetMapping(value = "/admin/role")
-    public String getRoleView (RedirectAttributes redirectAttributes, Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
-        if(Admin.role_manage == 0){
-            redirectAttributes.addFlashAttribute("mess","Bạn không có quyền sử dụng chức năng này");
+    public String getRoleView(RedirectAttributes redirectAttributes, Model model, @RequestParam(value = "name", required = false) String name) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
+        if (Admin.role_manage == 0) {
+            redirectAttributes.addFlashAttribute("mess", "Bạn không có quyền sử dụng chức năng này");
             return "redirect:/admin/index";
         }
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
 
         List<ResponseRole> apiResponse = adminService.getAllRole(name);
-        model.addAttribute("name",name);
-        model.addAttribute("listRole",apiResponse);
+        model.addAttribute("name", name);
+        model.addAttribute("listRole", apiResponse);
         return "/admin/role";
     }
 
     @GetMapping(value = "/admin/role/addRole")
-    public String getAddRoleView (Model model) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+    public String getAddRoleView(Model model) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
 
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
-        model.addAttribute("role",new RequestRole());
+        model.addAttribute("role", new RequestRole());
         return "/admin/addRole";
     }
 
     @PostMapping(value = "/admin/role/saveRole")
-    public String postSaveRole (RedirectAttributes redirectAttributes,Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
-        if(requestRole.getName().isEmpty()){
-            redirectAttributes.addFlashAttribute("mess","Name role is required");
-            redirectAttributes.addFlashAttribute("role",requestRole);
+    public String postSaveRole(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
+        if (requestRole.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mess", "Name role is required");
+            redirectAttributes.addFlashAttribute("role", requestRole);
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
             return "redirect:/admin/role/addRole";
         }
 
         ApiResponse<ResponseRole> apiResponse = adminService.addRole(requestRole);
-        if(apiResponse.getStatus() == StatusEnum.ERROR){
-            redirectAttributes.addFlashAttribute("mess","Name is exist");
+        if (apiResponse.getStatus() == StatusEnum.ERROR) {
+            redirectAttributes.addFlashAttribute("mess", "Name is exist");
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
             return "redirect:/admin/role/addRole";
         }
 
-        redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("mess", "success");
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/role";
     }
 
     @GetMapping(value = "/admin/role/detailRole/{id}")
-    public String getDetailRoleView (Model model,@PathVariable int id) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+    public String getDetailRoleView(Model model, @PathVariable int id) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
 
         ApiResponse<ResponseRole> apiResponse = adminService.getRoleById(id);
-        model.addAttribute("role",apiResponse.getPayload());
+        model.addAttribute("role", apiResponse.getPayload());
         return "/admin/detailRole";
     }
+
     @PostMapping(value = "/admin/role/editRole")
-    public String getEditRoleView (RedirectAttributes redirectAttributes,Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
-        if(requestRole.getName().isEmpty()){
-            redirectAttributes.addFlashAttribute("mess","Name role is required");
-            redirectAttributes.addFlashAttribute("role",requestRole);
+    public String getEditRoleView(RedirectAttributes redirectAttributes, Model model, @ModelAttribute("role") RequestRole requestRole) throws Exception {
+        if (requestRole.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mess", "Name role is required");
+            redirectAttributes.addFlashAttribute("role", requestRole);
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
-            return "redirect:/admin/role/detailRole/"+requestRole.getId();
+            return "redirect:/admin/role/detailRole/" + requestRole.getId();
         }
         ApiResponse<ResponseRole> apiResponse = adminService.editRole(requestRole);
         System.out.println(apiResponse);
-        if(apiResponse.getStatus() == StatusEnum.ERROR){
+        if (apiResponse.getStatus() == StatusEnum.ERROR) {
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
-            redirectAttributes.addFlashAttribute("mess","Name is exist");
-            return "redirect:/admin/role/detailRole/"+requestRole.getId();
+            redirectAttributes.addFlashAttribute("mess", "Name is exist");
+            return "redirect:/admin/role/detailRole/" + requestRole.getId();
         }
-        redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("mess", "success");
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
-        return "redirect:/admin/role/detailRole/"+requestRole.getId();
+        return "redirect:/admin/role/detailRole/" + requestRole.getId();
     }
+
     @GetMapping(value = "/admin/role/delete/{id}")
-    public String deleteRole (RedirectAttributes redirectAttributes, @PathVariable int id) throws Exception {
+    public String deleteRole(RedirectAttributes redirectAttributes, @PathVariable int id) throws Exception {
         ApiResponse<ResponseRole> apiResponse = adminService.deleteRoleById(id);
-        if(apiResponse.getStatus() == StatusEnum.ERROR){
-            redirectAttributes.addFlashAttribute("mess",apiResponse.getMessage());
-        }else{
-            redirectAttributes.addFlashAttribute("mess","success");
+        if (apiResponse.getStatus() == StatusEnum.ERROR) {
+            redirectAttributes.addFlashAttribute("mess", apiResponse.getMessage());
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "success");
         }
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/role";
     }
 
-    //+++++++++++++++++++++++++Account++++++++++++++++++++++++++++++++++++++
     //+++++++++++++++++++++++++++User+++++++++++++++++++++++++++++++++++++++
     @GetMapping(value = "/admin/accountUser")
-    public String getAccountUserView (RedirectAttributes redirectAttributes,Model model, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "page") int page) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
-        if(Admin.account_manage == 0){
+    public String getAccountUserView(RedirectAttributes redirectAttributes, Model model, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "page") int page) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
+        if (Admin.account_manage == 0) {
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
-            redirectAttributes.addFlashAttribute("mess","Bạn không có quyền sử dụng chức năng này");
+            redirectAttributes.addFlashAttribute("mess", "Bạn không có quyền sử dụng chức năng này");
             return "redirect:/admin/index";
         }
 
@@ -203,18 +208,18 @@ public class AdminListController {
 
         apiResponse = apiResponse.stream().skip(startIndex).limit(pageSize).collect(Collectors.toList());
 
-        Pager pager = new Pager(totalPage,page,pageSize);
-        model.addAttribute("search",search);
-        model.addAttribute("listUser",apiResponse);
-        model.addAttribute("pager",pager);
+        Pager pager = new Pager(totalPage, page, pageSize);
+        model.addAttribute("search", search);
+        model.addAttribute("listUser", apiResponse);
+        model.addAttribute("pager", pager);
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
         return "/admin/accountUser";
     }
 
     @GetMapping(value = "/admin/profile")
-    public String getProfileView (Model model, @RequestParam(value = "username") String username,@RequestParam(value = "action", required = false) int action) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
+    public String getProfileView(Model model, @RequestParam(value = "username") String username, @RequestParam(value = "action", required = false) int action) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
 
         ApiResponse<ResponseAccount> apiResponse = adminService.getAccountByUserName(username);
         List<ResponseRole> roles = adminService.getAllRole("");
@@ -227,16 +232,17 @@ public class AdminListController {
     }
 
     @GetMapping(value = "/admin/accountAdmin")
-    public String getAccountAdminView (RedirectAttributes redirectAttributes,Model model, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "page") int page) throws Exception {
-        if(Admin.userName.isEmpty()) return "redirect:/admin/login";
-        if(Admin.admin_manage == 0){
+    public String getAccountAdminView(RedirectAttributes redirectAttributes, Model model, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "page") int page) throws Exception {
+        if (Admin.userName.isEmpty()) return "redirect:/admin/login";
+        if (Admin.admin_manage == 0) {
             redirectAttributes.addFlashAttribute("username", username());
             redirectAttributes.addFlashAttribute("roleName", role());
-            redirectAttributes.addFlashAttribute("mess","Bạn không có quyền sử dụng chức năng này");
+            redirectAttributes.addFlashAttribute("mess", "Bạn không có quyền sử dụng chức năng này");
             return "redirect:/admin/index";
         }
 
         List<ResponseAccount> apiResponse = adminService.getAllAdmin(search, page);
+        List<ResponseRole> listRole = adminService.getAllRole("");
 
         int pageSize = 1;
         int startIndex = (page - 1) * pageSize;
@@ -244,45 +250,57 @@ public class AdminListController {
 
         apiResponse = apiResponse.stream().skip(startIndex).limit(pageSize).collect(Collectors.toList());
 
-        Pager pager = new Pager(totalPage,page,pageSize);
-        model.addAttribute("search",search);
-        model.addAttribute("listUser",apiResponse);
-        model.addAttribute("pager",pager);
+        Pager pager = new Pager(totalPage, page, pageSize);
+        model.addAttribute("search", search);
+        model.addAttribute("listUser", apiResponse);
+        model.addAttribute("pager", pager);
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
+        model.addAttribute("listRole", listRole);
         return "/admin/accountAdmin";
     }
 
     @PostMapping(value = "/admin/account/editProfile")
-    public String editProfile (RedirectAttributes redirectAttributes, Model model, @RequestBody ResponseAccount account) throws Exception {
+    public String editProfile(RedirectAttributes redirectAttributes, Model model, @RequestBody ResponseAccount account) throws Exception {
 
-        redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("account", account);
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
         return "redirect:/admin/profile?username=" + account.getUsername();
     }
 
+    @GetMapping(value = "/admin/findUserName")
+    @ResponseBody
+    public String findUserName(@RequestParam String username) throws Exception {
+        return adminService.findByUsername(username);
+    }
+    @PostMapping(value = "/admin/create")
+    public ResponseEntity<String> createAdmin(@RequestBody RequestAccountRegister requestAccountRegister) throws Exception {
+        System.out.println(requestAccountRegister);
+        adminService.createAdmin(requestAccountRegister);
+        return ResponseEntity.ok("success");
+    }
+
     @GetMapping(value = "/admin/account/changeStatus")
-    public String changeStatus (RedirectAttributes redirectAttributes,@RequestParam(value = "id") int id) throws Exception {
+    public String changeStatus(RedirectAttributes redirectAttributes, @RequestParam(value = "id") int id) throws Exception {
         String userName = adminService.changeStatus(id);
-        redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("mess", "success");
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
-        return "redirect:/admin/accountUser?search="+userName+"&page=1";
+        return "redirect:/admin/accountUser?search=" + userName + "&page=1";
     }
 
     @GetMapping(value = "/admin/account/changeStatusAdmin")
-    public String changeStatusAdmin (RedirectAttributes redirectAttributes,@RequestParam(value = "id") int id) throws Exception {
+    public String changeStatusAdmin(RedirectAttributes redirectAttributes, @RequestParam(value = "id") int id) throws Exception {
         String userName = adminService.changeStatus(id);
-        redirectAttributes.addFlashAttribute("mess","success");
+        redirectAttributes.addFlashAttribute("mess", "success");
         redirectAttributes.addFlashAttribute("username", username());
         redirectAttributes.addFlashAttribute("roleName", role());
-        return "redirect:/admin/accountAdmin?search="+userName+"&page=1";
+        return "redirect:/admin/accountAdmin?search=" + userName + "&page=1";
     }
 
     @GetMapping(value = "/admin/ChangeToRecruiter")
-    public String ChangeToRecruiter (Model model,@RequestParam(value = "page") int page) throws Exception {
+    public String ChangeToRecruiter(Model model, @RequestParam(value = "page") int page) throws Exception {
 
 
         model.addAttribute("username", username());
@@ -290,8 +308,14 @@ public class AdminListController {
         return "/admin/changeToRecruiter";
     }
 
+    @GetMapping(value = "/admin/sendOTP")
+    @ResponseBody
+    public String SendOTP(Model model, @RequestParam(value = "email") String email) throws Exception {
+        return adminService.sendOTP(email);
+    }
+
     @GetMapping(value = "/admin/logout")
-    public String logout () throws Exception {
+    public String logout() throws Exception {
         Admin.id = -1;
         Admin.userName = "";
         Admin.nameRole = "";
@@ -301,11 +325,11 @@ public class AdminListController {
         return "redirect:/admin/login";
     }
 
-    public String username(){
+    public String username() {
         return Admin.userName;
     }
 
-    public String role(){
+    public String role() {
         return Admin.nameRole;
     }
 }
