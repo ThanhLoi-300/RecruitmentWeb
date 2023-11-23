@@ -58,4 +58,5 @@ public interface AdminService {
     String sendOTP(String mail);
     String findByUsername(String username);
     void createAdmin(RequestAccountRegister requestAccountRegister);
+    String changeRoleAdmin(String user, String role);
 }

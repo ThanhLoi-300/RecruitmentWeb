@@ -202,7 +202,7 @@ public class AdminListController {
 
         List<ResponseAccount> apiResponse = adminService.getAllUser(search, page);
 
-        int pageSize = 1;
+        int pageSize = 2;
         int startIndex = (page - 1) * pageSize;
         int totalPage = (int) Math.ceil((double) apiResponse.size() / pageSize);
 
@@ -244,7 +244,7 @@ public class AdminListController {
         List<ResponseAccount> apiResponse = adminService.getAllAdmin(search, page);
         List<ResponseRole> listRole = adminService.getAllRole("");
 
-        int pageSize = 1;
+        int pageSize = 2;
         int startIndex = (page - 1) * pageSize;
         int totalPage = (int) Math.ceil((double) apiResponse.size() / pageSize);
 
@@ -274,6 +274,14 @@ public class AdminListController {
     public String findUserName(@RequestParam String username) throws Exception {
         return adminService.findByUsername(username);
     }
+
+    @GetMapping(value = "/admin/changeRoleAdmin")
+    @ResponseBody
+    public String changeRoleAdmin(@RequestParam(value = "user") String user, @RequestParam(value = "role") String role) throws Exception {
+        adminService.changeRoleAdmin(user,role);
+        return null;
+    }
+
     @PostMapping(value = "/admin/create")
     public ResponseEntity<String> createAdmin(@RequestBody RequestAccountRegister requestAccountRegister) throws Exception {
         System.out.println(requestAccountRegister);

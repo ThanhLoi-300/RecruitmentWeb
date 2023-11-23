@@ -55,4 +55,5 @@ public interface AdminService {
 
     //===========================Admin=============================
     List<ResponseAccount> findAllAdmin (String userName, int page) throws Exception;
+    String changeRoleAdmin (int user, int role) throws Exception;
 }

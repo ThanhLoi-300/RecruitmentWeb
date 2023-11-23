@@ -153,6 +153,12 @@ public class AdminController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/changeRoleAdmin")
+    public ResponseEntity<String> changeRoleAdmin(@RequestParam(value = "user") int user,@RequestParam(value = "role") int role) throws Exception {
+        System.out.println(user+" "+role);
+        return new ResponseEntity<>(adminService.changeRoleAdmin(user,role), HttpStatus.OK);
+    }
+
 
     //=========================Role===========================
 @GetMapping("/role/{id}")

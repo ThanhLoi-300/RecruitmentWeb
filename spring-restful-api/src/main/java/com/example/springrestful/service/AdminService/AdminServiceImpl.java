@@ -258,4 +258,11 @@ public class AdminServiceImpl implements AdminService{
         else list = accountRepository.getAllAdmin(userName);
         return accountMapper.toResponseAccountList(list);
     }
+
+    @Override
+    public String changeRoleAdmin(int user, int role) throws Exception {
+        Role r = accountRoleRepository.findByRoleId(role);
+        adminRepository.changeRoleAdmin(user,r);
+        return "ok";
+    }
 }

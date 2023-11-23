@@ -92,10 +92,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="item,index : ${listUser}">
-                                    <td th:text="${index.count}"></td>
+                                <tr th:each="item,index : ${listUser}" style="cursor:pointer">
+                                    <td th:text="${index.count + (pager.current_Page -1 ) * pager.page_Size}"></td>
                                     <td th:text="${item.username}"></td>
-                                    <td th:text="${item.role}"> </td>
+                                    <td>
+                                        <label th:if="${item.username == username}" th:text="${item.role_id.name}"></label>
+                                        <select th:if="${item.username != username}" name="role_id" onChange="changeRole(this)" th:data-user="${item.id}">
+                                            <option th:value="${item.role_id.id}" th:text="${item.role_id.name}"></option>
+                                            <option th:each="role : ${listRole}" th:value="${role.id}" th:text="${role.name}"></option>
+                                        </select>
+                                    </td>
                                     <td th:text="${item.email}"> </td>
                                     <td th:switch="${item.status}" class="text-center" th:data-id="${item.id}" th:data-userName="${search}" th:data-page="${pager.current_Page}" onClick="banNickAdmin(this)">
                                         <span class="badge badge-success" th:case=0>Active</span>
@@ -322,6 +328,24 @@
                 text: 'Mật khẩu và nhập lại mật khẩu không khớp'
             })
         }
+    }
+
+    function changeRole(selectElement) {
+        var selectedValue = selectElement.value;
+        var user = selectElement.getAttribute('data-user')
+
+        $.ajax({
+               url: "/admin/changeRoleAdmin?role="+selectedValue+"&user="+user,
+               type: "GET",
+               contentType: "application/json",
+               success: function(response) {
+               },
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Congratulation!!!!!!',
+            text: 'Lưu thành công'
+        })
     }
 </script>
 

@@ -208,4 +208,13 @@ public class AdminServiceImpl implements AdminService{
     public void createAdmin(RequestAccountRegister requestAccountRegister) {
         commonRestClient.post(apiUrl+"/createAdmin",requestAccountRegister);
     }
+
+    @Override
+    public String changeRoleAdmin(String user, String role) {
+        Map<String, String> params = new HashMap<>();
+        params.put("user", user);
+        params.put("role", role);
+        commonRestClient.get(apiUrl+"/changeRoleAdmin",String.class,params);
+        return null;
+    }
 }
