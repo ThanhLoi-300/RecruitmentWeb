@@ -7,4 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Integer> {
     Job findById (int id);
+
+    Job findBylocationDetail (String locationDetail);
+    Job findByregion (String region);
+    Job findBycity (String city);
+    Job findBytitle (String title);
+
 }
