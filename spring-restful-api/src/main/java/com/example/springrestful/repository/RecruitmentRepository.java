@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecruitmentRepository extends JpaRepository<Recruiter, Integer> {
     Recruiter findById (int id);
-    Candidate contactWithCandidate(String email);
+    //Candidate contactWithCandidate(String email);
 }
