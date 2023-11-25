@@ -1,12 +1,16 @@
 package com.example.springrestful.model.entity.Job;
 
 import com.example.springrestful.model.entity.Account.Account;
+import com.example.springrestful.model.entity.Candidate.InfoApply;
+import com.example.springrestful.model.entity.Recruiter.Recruiter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -83,4 +87,11 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "recruiter_id", nullable = false)
+    private Recruiter recruiter ;
+
+    @OneToMany(mappedBy = "job")
+    private List<InfoApply> infoApplyList = new ArrayList<>();
 }

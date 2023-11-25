@@ -7,6 +7,7 @@ import com.example.springrestful.model.response.ResponseJob.ResponseJob;
 import com.example.springrestful.repository.AccountRepository;
 import com.example.springrestful.repository.CategoryRepository;
 import com.example.springrestful.repository.JobRepository;
+import com.example.springrestful.repository.RecruitmentRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -23,6 +24,8 @@ public class JobServiceImpl implements JobService{
     JobRepository jobRepository;
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    RecruitmentRepository recruitmentRepository;
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -51,6 +54,7 @@ public class JobServiceImpl implements JobService{
         job.setSkillRequired(requestJob.getSkillRequired());
         job.setAccount(accountRepository.findById(requestJob.getAccountId()));
         job.setCategory(categoryRepository.findById(requestJob.getCategoryId()));
+        job.setRecruiter(recruitmentRepository.findById(requestJob.getRecruiterId()));
 
         return jobMapper.toResponseJob(jobRepository.save(job));
     }
@@ -110,5 +114,77 @@ public class JobServiceImpl implements JobService{
 
         return jobMapper.toResponseJobList((List<Job>) query.getResultList());
 
+    }
+
+    @Override
+    public ResponseJob editJob(RequestJob requestJob) throws Exception {
+        Job job = jobRepository.findById(requestJob.getId());
+
+        job.setId(requestJob.getId());
+        job.setTitle(requestJob.getTitle());
+        job.setImage(requestJob.getImage());
+        job.setCity(requestJob.getCity());
+        job.setRegion(requestJob.getRegion());
+
+        return jobMapper.toResponseJob(jobRepository.save(job));
+
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByType(String type) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByLocation(String locationDetail) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByCity(String city) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByRegion(String region) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByTitleLimit(String title, int limit, int offset) throws Exception {
+        String jpql = "SELECT n FROM Job n WHERE n.title LIKE :title";
+
+        Query query = entityManager.createQuery(jpql);
+        query.setParameter("title", "%" + title + "%");
+        query.setFirstResult((offset - 1) * limit);
+        query.setMaxResults(limit);
+
+        return jobMapper.toResponseJobList((List<Job>) query.getResultList());    }
+
+
+
+    @Override
+    public List<ResponseJob> findJobsBySalaryRange(double min, double max) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByCategoryId(int id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ResponseJob> findJobsByTop(int top) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object findAllJobLimit(int limit, int offset) {
+        return null;
+    }
+
+    @Override
+    public Object plusJobViewById(int id) {
+        return null;
     }
 }
