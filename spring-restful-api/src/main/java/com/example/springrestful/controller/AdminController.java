@@ -14,6 +14,7 @@ import com.example.springrestful.model.response.ApiResponse.ApiResponse;
 import com.example.springrestful.model.response.ApiResponse.StatusEnum;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
+import com.example.springrestful.model.response.ResponseDashboard.ResponseDashboard;
 import com.example.springrestful.service.AccountService.AccountService;
 import com.example.springrestful.service.AdminService.AdminService;
 import com.example.springrestful.util.ValidatorUtil;
@@ -90,6 +91,17 @@ public class AdminController {
         try {
             ApiResponse apiResponse = new ApiResponse();
             apiResponse.ok(adminService.findAllAdmin(userName,page));
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (Exception ex) {
+            throw new ApplicationException(ex.getMessage()); // Handle other exceptions
+        }
+    }
+
+    @GetMapping(value = "/countStatistics")
+    public ResponseEntity<ApiResponse<ResponseDashboard>> getDashboard() throws Exception {
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.ok(adminService.countStatistics());
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage()); // Handle other exceptions
