@@ -31,4 +31,5 @@ public class RequestJob {
     private String skillRequired;
     private int accountId;
     private int categoryId;
+    private int recruiterId;
 }
