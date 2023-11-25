@@ -31,5 +31,4 @@ public class ResponseJob {
     private String skillRequired;
     private int accountId;
     private int categoryId;
-    private int recruiterId;
 }
