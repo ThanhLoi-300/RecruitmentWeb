@@ -7,6 +7,7 @@ import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
+import com.example.springwebapp.model.response.ResponseDashboard.ResponseDashboard;
 import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import org.springframework.http.ResponseEntity;
 
@@ -59,4 +60,5 @@ public interface AdminService {
     String findByUsername(String username);
     void createAdmin(RequestAccountRegister requestAccountRegister);
     String changeRoleAdmin(String user, String role);
+    ResponseDashboard countStatistics();
 }

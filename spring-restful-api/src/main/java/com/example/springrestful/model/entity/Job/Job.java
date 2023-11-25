@@ -83,4 +83,13 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+
+    @ManyToOne
+    @JoinColumn(name = "recruiter_id", nullable = false)
+    private Recruiter recruiter ;
+
+//    @OneToMany(mappedBy = "job")
+//    private List<InfoApply> infoApplyList = new ArrayList<>();
+
 }

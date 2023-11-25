@@ -7,6 +7,7 @@ import com.example.springrestful.model.request.RequestAdmin.RequestAdminProfile;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdminProfile;
+import com.example.springrestful.model.response.ResponseDashboard.ResponseDashboard;
 
 import java.util.List;
 
@@ -56,4 +57,5 @@ public interface AdminService {
     //===========================Admin=============================
     List<ResponseAccount> findAllAdmin (String userName, int page) throws Exception;
     String changeRoleAdmin (int user, int role) throws Exception;
+    ResponseDashboard countStatistics();
 }
