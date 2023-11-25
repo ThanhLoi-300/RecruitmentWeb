@@ -28,13 +28,5 @@ public interface AdminRepository extends JpaRepository<Admin, Integer> {
     @Query(value = "UPDATE Account a SET a.role_id = :role WHERE a.id = :user")
     void changeRoleAdmin(@Param("user") int user,@Param("role") Role role);
 
-    @Query("SELECT COUNT(a) FROM Account a WHERE a.role <> 'Admin'")
-    int countNumberUserRegister();
-    @Query("SELECT COUNT(a) FROM Account a WHERE a.role = 'Recruiter'")
-    int countNumberRecruiterRegister();
-    @Query("SELECT COUNT(a) FROM Account a WHERE a.role = 'Candidate'")
-    int countNumberCandidateRegister();
-    @Query("SELECT COUNT(a) FROM Job a")
-    int countNumberJobs();
 
 }

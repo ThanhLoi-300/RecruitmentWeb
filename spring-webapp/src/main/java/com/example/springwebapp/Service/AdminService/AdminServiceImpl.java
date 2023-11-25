@@ -10,7 +10,6 @@ import com.example.springwebapp.model.request.RequestRole.RequestRole;
 import com.example.springwebapp.model.response.ApiResponse.ApiResponse;
 import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
-import com.example.springwebapp.model.response.ResponseDashboard.ResponseDashboard;
 import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import com.example.springwebapp.restapi.CommonRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -214,17 +216,5 @@ public class AdminServiceImpl implements AdminService{
         params.put("role", role);
         commonRestClient.get(apiUrl+"/changeRoleAdmin",String.class,params);
         return null;
-    }
-
-    @Override
-    public ResponseDashboard countStatistics() {
-        Map<String, String> params = new HashMap<>();
-        LinkedHashMap<String, Object> result = (LinkedHashMap<String, Object>) commonRestClient.get(apiUrl+"/countStatistics",ApiResponse.class,params).getPayload();
-        ResponseDashboard response = new ResponseDashboard();
-        response.setCountJobs((Integer)result.get("countJobs"));
-        response.setCountUser((Integer)result.get("countUser"));
-        response.setCountRecruiters((Integer)result.get("countRecruiters"));
-        response.setCountUsers((Integer)result.get("countUsers"));
-        return response;
     }
 }

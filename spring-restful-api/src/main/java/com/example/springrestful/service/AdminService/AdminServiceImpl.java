@@ -9,7 +9,6 @@ import com.example.springrestful.model.mapper.AdminMapper;
 import com.example.springrestful.model.request.RequestAdmin.RequestAdmin;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.model.response.ResponseAdmin.ResponseAdmin;
-import com.example.springrestful.model.response.ResponseDashboard.ResponseDashboard;
 import com.example.springrestful.repository.AccountRepository;
 import com.example.springrestful.repository.AccountRoleRepository;
 import com.example.springrestful.repository.AdminRepository;
@@ -265,15 +264,5 @@ public class AdminServiceImpl implements AdminService{
         Role r = accountRoleRepository.findByRoleId(role);
         adminRepository.changeRoleAdmin(user,r);
         return "ok";
-    }
-
-    @Override
-    public ResponseDashboard countStatistics() {
-        ResponseDashboard res = new ResponseDashboard();
-        res.setCountUsers(adminRepository.countNumberUserRegister());
-        res.setCountUser(adminRepository.countNumberCandidateRegister());
-        res.setCountRecruiters(adminRepository.countNumberRecruiterRegister());
-        res.setCountJobs(adminRepository.countNumberJobs());
-        return res;
     }
 }

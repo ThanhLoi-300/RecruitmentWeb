@@ -25,36 +25,4 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Job> jobs;
-
-    @NotBlank(message = "Content is required")
-    @Column(name = "content", columnDefinition = "LONGTEXT")
-    private String content;
-
-    @NotBlank(message = "thumbnail is required")
-    @Column(name = "thumbnail", columnDefinition = "LONGTEXT")
-    private String thumbnail;
-
-    @NotNull(message = "Date created is required")
-    @Column(name = "date_created", nullable = false)
-    private Date dateCreated;
-
-    @NotNull(message = "Date updated is required")
-    @Column(name = "date_updated", nullable = false)
-    private Date dateUpdated;
-
-    @Min(value = 0, message = "View number must be greater than or equal to 0")
-    @Column(name = "view_number", nullable = false)
-    private int viewNumber;
-
-    @Column(name = "status", nullable = false)
-    private String status = "active";
-
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
-
-//    @OneToMany(mappedBy = "news")
-//    private List<Comment> commentList;
-
-
 }

@@ -19,7 +19,6 @@ import com.example.springwebapp.model.response.ResponseAccount.ResponseAccount;
 import com.example.springwebapp.model.response.ResponseAdmin.ResponseAdmin;
 import com.example.springwebapp.Service.AccountService.AccountService;
 import com.example.springwebapp.Service.AdminService.AdminService;
-import com.example.springwebapp.model.response.ResponseDashboard.ResponseDashboard;
 import com.example.springwebapp.model.response.ResponseRole.ResponseRole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +81,6 @@ public class AdminListController {
     public String getIndexView(Model model) {
         if (Admin.userName.isEmpty()) return "redirect:/admin/login";
 
-        ResponseDashboard res = adminService.countStatistics();
-        model.addAttribute("jobs", res.getCountJobs());
-        model.addAttribute("user", res.getCountUser());
-        model.addAttribute("recruiters", res.getCountRecruiters());
-        model.addAttribute("users", res.getCountUsers());
         model.addAttribute("username", username());
         model.addAttribute("roleName", role());
         return "/admin/index";
