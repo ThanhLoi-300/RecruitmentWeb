@@ -8,6 +8,7 @@ package com.example.springwebapp.controller;/*
 
 import com.example.springwebapp.model.Mapper.AccountMapper;
 import com.example.springwebapp.model.Mapper.JobMapper;
+import com.example.springwebapp.model.Static.User;
 import com.example.springwebapp.model.model.Pager;
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountLogin;
 import com.example.springwebapp.model.request.RequestAccount.RequestAccountRegister;
@@ -320,6 +321,23 @@ public class AdminListController {
     @ResponseBody
     public String SendOTP(Model model, @RequestParam(value = "email") String email) throws Exception {
         return adminService.sendOTP(email);
+    }
+
+    @PostMapping(value = "/admin/loginUser")
+    public String loginUser(RedirectAttributes redirectAttributes,@ModelAttribute("requestAccountLogin") RequestAccountLogin requestAccountLogin) throws Exception {
+        requestAccountLogin.setIsAdmin(0);
+        ResponseAccount account = adminService.loginAccount(requestAccountLogin);
+        System.out.println("abc "+account);
+        if (account == null) {
+            redirectAttributes.addFlashAttribute("mess", "login fail");
+            return "redirect:/login";
+        }
+
+        User.name = account.getUsername();
+        User.role = account.getRole();
+        User.id = account.getId();
+        redirectAttributes.addFlashAttribute("username", account.getUsername());
+        return "redirect:/";
     }
 
     @GetMapping(value = "/admin/logout")

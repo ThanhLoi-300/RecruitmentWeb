@@ -86,27 +86,6 @@ public class AdminServiceImpl implements AdminService{
         return adminRepository.findAll();
     }
 
-//    @Override
-//    public List<Admin> findByRole(String role) throws Exception {
-////        return adminMapper.toResponseAdminList(adminRepository.findByRole(role));
-//        return adminRepository.findByRole(role);
-//    }
-
-//    @Override
-//    public List<ResponseAdmin> findByStatus(int status) throws Exception {
-//        return adminMapper.toResponseAdminList(adminRepository.findByStatus(status));
-//    }
-//
-//    @Override
-//    public List<ResponseAdmin> findByManagedBy(Integer managedBy) throws Exception {
-//        return adminMapper.toResponseAdminList(adminRepository.findByManagedBy(managedBy));
-//    }
-
-//    @Override
-//    public List<ResponseAdmin> findByAccountStatus(int accountStatus) {
-//        return adminMapper.toResponseAdminList(adminRepository.findByAccountStatusWithJPQL(accountStatus));
-//    }
-
     @Override
     public List<Admin> findByAccount(int accountId)throws Exception {
 //        return adminMapper.toResponseAdminList(adminRepository.findByAccountWithJPQL(accountId));
@@ -137,46 +116,6 @@ public class AdminServiceImpl implements AdminService{
 
         adminRepository.deleteById(id);
     }
-
-
-
-    //==========================AdminProfile==========================
-//    @Override
-//    public List<AdminProfile> findAllProfile() throws Exception {
-//        return adminProfileResponsitory.findAll();
-//    }
-//    @Override
-//    public ResponseAdminProfile saveProfile(RequestAdminProfile adminProfile)throws Exception {
-//        Admin admin=adminRepository.findById(adminProfile.getAdmin_id());
-//        if (admin!=null){
-//            AdminProfile saveAdminProfile = new AdminProfile();
-//            saveAdminProfile.setId(adminProfile.getId());
-//            saveAdminProfile.setDescription(adminProfile.getDescription());
-//            saveAdminProfile.setTitle(adminProfile.getTitle());
-//            saveAdminProfile.setLink(adminProfile.getLink());
-//            saveAdminProfile.setDateCreated(new Date());
-//            saveAdminProfile.setDateUpdated(new Date());
-//            saveAdminProfile.setAdminAdminProfile(admin);
-//
-//            return adminProfileMapper.toResponseAdminProfile(adminProfileResponsitory.save(saveAdminProfile));
-//        }
-//        return null;
-//
-//
-//    }
-////    @Override
-////    public AdminProfile save(AdminProfile adminProfile)throws Exception {
-////        return adminProfileResponsitory.saveAndFlush(adminProfile);
-////    }
-//
-//    @Override
-//    public ResponseAdminProfile findProfileById(int id) throws Exception {
-//        return adminProfileMapper.toResponseAdminProfile(adminProfileResponsitory.findById(id));
-//    }
-//    @Override
-//    public void removeProfileById(int id) throws Exception {
-//        adminProfileResponsitory.deleteById(id);
-//    }
 
     //===========================Role==================================
     @Override
