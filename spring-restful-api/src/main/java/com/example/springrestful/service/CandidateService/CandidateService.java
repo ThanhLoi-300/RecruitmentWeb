@@ -54,6 +54,6 @@ public interface CandidateService {
 
     RequestEvaluation evaluateRecruiterById (int id) throws Exception;
 
-    void sendEmailToCandidate(int id) throws Exception;;
+
 
 }

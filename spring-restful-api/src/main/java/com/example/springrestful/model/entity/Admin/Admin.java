@@ -1,4 +1,10 @@
-package com.example.springrestful.model.entity.Admin;
+package com.example.springrestful.model.entity.Admin;/*
+ * Created by IntelliJ IDEA.
+ * User: Nguyễn Ngọc Thiện
+ * Date: 10/1/2023
+ * Time: 10:01 AM
+ * To change this template use File | Settings | File and Code Templates.
+ */
 
 import com.example.springrestful.model.entity.Account.Account;
 import jakarta.persistence.*;
@@ -14,7 +20,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "admin")
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +36,12 @@ public class Admin {
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
-    @Column(name = "experience_year",nullable = false)
+    @Column(name = "experience_year",nullable = false,columnDefinition = "INT CHECK(experience_year>=0 AND experience_year<=10)")
     private int experienceYear;
 
     @NotEmpty(message = "Major is required")
     @Size(max = 50, message = "Major max is around 50 characters")
-    @Column(name = "major")
+    @Column(name = "major", nullable = false, length = 50)
     private String major;
 
     @NotEmpty(message = "Role is required")
@@ -48,7 +53,7 @@ public class Admin {
     private int status;
 
     @Column(name = "managed_by")
-    private int managedBy;
+    private Integer managedBy;
 
 //    @Column(name = "activeSession")
 //    private int activeSession;

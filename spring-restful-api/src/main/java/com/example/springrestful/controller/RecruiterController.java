@@ -5,7 +5,6 @@ import com.example.springrestful.exception.NotFoundException;
 import com.example.springrestful.exception.ValidationException;
 import com.example.springrestful.model.request.RequestRecruiter.RequestRecruiter;
 import com.example.springrestful.model.response.ApiResponse.ApiResponse;
-import com.example.springrestful.model.response.ResponseCandidate.ResponseCandidate;
 import com.example.springrestful.model.response.ResponseRecruiter.ResponseRecruiter;
 import com.example.springrestful.service.AccountService.AccountService;
 import com.example.springrestful.service.RecruitmentService.RecruitmentService;
@@ -14,13 +13,10 @@ import com.example.springrestful.validator.PaginationValidator.PaginationValidat
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -162,29 +158,6 @@ public class RecruiterController {
             throw ex; // Rethrow ValidationException
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage()); // Handle other exceptions
-        }
-    }
-    @CrossOrigin(origins = "http://localhost:8000")
-    @PostMapping(value = "/saveRecruiterFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
-    public ResponseEntity<ResponseRecruiter> saveRecruiterFile(@RequestParam("logo") MultipartFile logo,@RequestParam("id") int id) throws Exception {
-        ApiResponse apiResponse = new ApiResponse();
-        try {
-            StringBuilder filepathLogo = new StringBuilder("D:\\A\\mock_project_final\\spring-webapp\\src\\main\\resources\\static\\images\\recruiter\\logo\\");
-            String logoFileName = logo.getOriginalFilename();
-
-            filepathLogo.append(logoFileName);
-            String logoPath = filepathLogo.toString();
-
-
-            // Save CV file
-            logo.transferTo(new File(logoPath));
-            recruiterService.updateLogoById(id, logoPath) ;
-
-            // Perform other operations with the email parameter if needed
-            apiResponse.setMessage("Recruiter files uploaded successfully.");
-            return new ResponseEntity(apiResponse, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

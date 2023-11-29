@@ -1,6 +1,5 @@
 package com.example.springrestful.model.entity.Candidate;
 
-import com.example.springrestful.model.entity.Job.Job;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -34,7 +33,7 @@ public class InfoApply implements Serializable {
     private Candidate candidate;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "Job_ID")
-    private Job job;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "Job_ID")
+//    private Job job;
 }

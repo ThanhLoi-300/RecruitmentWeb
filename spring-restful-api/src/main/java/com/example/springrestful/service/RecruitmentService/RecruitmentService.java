@@ -18,6 +18,6 @@ public interface RecruitmentService {
     void contactWithCandidate(String to, String subject, String content) throws MessagingException;
 
     List<ResponseRecruiter> followCandidate (int infoApplyStatus) throws Exception;
-    void updateLogoById(int id, String logoPath);
+
     String writeImg(MultipartFile file);
 }

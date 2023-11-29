@@ -57,9 +57,7 @@ public class Category {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-
-    @OneToMany(mappedBy = "news")
-    private List<Comment> commentList;
-
+//    @OneToMany(mappedBy = "news")
+//    private List<Comment> commentList;
 
 }
