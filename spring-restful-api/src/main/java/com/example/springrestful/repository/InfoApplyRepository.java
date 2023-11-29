@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface InfoApplyRepository extends JpaRepository<InfoApply, Integer> {
@@ -13,6 +14,7 @@ public interface InfoApplyRepository extends JpaRepository<InfoApply, Integer> {
     InfoApply findByAppliedDate(Date appliedDate);
 
     InfoApply findByStatus(int status);
+    List<InfoApply> findByJob_IdAndJob_Recruiter_Id(Long jobId, Long recruiterId);
 
 
 }

@@ -123,6 +123,11 @@ public class RecruitmentServiceImpl implements RecruitmentService {
         return recruiterMapper.toResponseRecruiterList((List<Recruiter>) query.getResultList());
     }
 
+    @Override
+    public void updateLogoById(int id, String logoPath) {
+
+    }
+
     public String writeImg(MultipartFile file) {
         try {
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss-"));

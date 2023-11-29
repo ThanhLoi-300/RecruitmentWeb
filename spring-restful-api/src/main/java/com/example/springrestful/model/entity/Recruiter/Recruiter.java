@@ -67,9 +67,9 @@ public class Recruiter {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-//    @OneToMany(mappedBy = "recruiter")
-//    private List<Job> jobList;
-//
-//    @OneToMany(mappedBy = "recruiter")
-//    private List<Evaluation> evaluationList;
+    @OneToMany(mappedBy = "recruiter")
+    private List<Job> jobList;
+
+    @OneToMany(mappedBy = "recruiter")
+    private List<Evaluation> evaluationList;
 }

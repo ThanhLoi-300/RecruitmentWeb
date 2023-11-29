@@ -59,6 +59,8 @@ public class Evaluation {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-
+    @ManyToOne
+    @JoinColumn(name = "recruiter_id", nullable = false)
+    private Recruiter recruiter;
 
 }
