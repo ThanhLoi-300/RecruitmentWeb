@@ -13,4 +13,5 @@ public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
     Candidate findByEmail(String email);
     List<Candidate> findByMajorContains(String major);
     List<Candidate> findByServiceContains(String service);
+
 }

@@ -24,6 +24,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.xml.bind.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -289,6 +291,36 @@ public class CandidateServiceImpl implements CandidateService{
         return null;
     }
 
+    private final JavaMailSender javaMailSender;
+
+    @Autowired
+    public CandidateServiceImpl(JavaMailSender javaMailSender, CandidateRepository candidateRepository) {
+        this.javaMailSender = javaMailSender;
+        this.candidateRepository = candidateRepository;
+    }
+
+    public void sendEmailToCandidate(int id) {
+        // Lấy thông tin ứng viên từ cơ sở dữ liệu
+        Candidate candidate = candidateRepository.findById(id).orElse(null);
+
+        if (candidate != null) {
+            // Lấy thông tin email của ứng viên từ cơ sở dữ liệu
+            String candidateEmail = candidate.getAccount().getEmail(); // Giả sử thông tin email lưu trong bảng Account
+
+            // Gửi email đến ứng viên
+            try {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setTo(candidateEmail);
+                message.setSubject("Thông báo về việc ứng tuyển");
+                message.setText("Xin chào, bạn đã ứng tuyển thành công vào công việc!");
+
+                javaMailSender.send(message);
+            } catch (MailException e) {
+                // Xử lý lỗi nếu gửi email không thành công
+            }
+        }
+    }
+
     @Override
     public List<ResponseCandidate> findByMajorContains(String major) throws Exception{
         return  candidateMapper.toResponseCandidateList(candidateRepository.findByMajorContains(major)) ;
@@ -313,5 +345,6 @@ public class CandidateServiceImpl implements CandidateService{
         }
         return candidateMapper.toResponseCandidate(candidateRepository.save(editCandidate));
     }
+
 }
 

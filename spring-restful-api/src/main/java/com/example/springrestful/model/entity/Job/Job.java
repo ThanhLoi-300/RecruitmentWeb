@@ -92,6 +92,7 @@ public class Job {
     @JoinColumn(name = "recruiter_id", nullable = false)
     private Recruiter recruiter ;
 
-//    @OneToMany(mappedBy = "job")
-//    private List<InfoApply> infoApplyList = new ArrayList<>();
+    @OneToMany(mappedBy = "job")
+    private List<InfoApply> infoApplyList;
+
 }

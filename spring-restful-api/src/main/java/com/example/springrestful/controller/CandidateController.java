@@ -260,4 +260,9 @@ public class CandidateController {
         apiResponse.ok(responseCandidate);
         return new ResponseEntity(apiResponse, HttpStatus.OK);
     }
+    @GetMapping("/sendEmail/{candidateId}")
+    public String sendEmailToCandidate(@PathVariable int id) throws Exception {
+        candidateService.sendEmailToCandidate(id);
+        return "Email sent to candidate ID: " + id;
+    }
 }

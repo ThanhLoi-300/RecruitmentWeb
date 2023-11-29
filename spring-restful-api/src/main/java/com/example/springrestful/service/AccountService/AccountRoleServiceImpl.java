@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 public class AccountRoleServiceImpl implements AccountRoleService{
-    @Autowired
     AccountRoleRepository accountRoleRepository;
 
     @Override

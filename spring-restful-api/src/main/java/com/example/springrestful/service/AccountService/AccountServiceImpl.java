@@ -1,12 +1,10 @@
 package com.example.springrestful.service.AccountService;
 
 import com.example.springrestful.model.entity.Account.Account;
-import com.example.springrestful.model.entity.Account.AccountRole;
 import com.example.springrestful.model.entity.UserLogin.UserLogin;
 import com.example.springrestful.model.mapper.AccountMapper;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountEdit;
 import com.example.springrestful.model.request.RequestAccount.RequestAccountRegister;
-import com.example.springrestful.model.request.RequestAccount.RequestRegisterOTP;
 import com.example.springrestful.model.response.ResponseAccount.ResponseAccount;
 import com.example.springrestful.repository.AccountRepository;
 import com.example.springrestful.repository.AccountRoleRepository;
@@ -27,16 +25,11 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService{
-    @Autowired
     AccountRepository accountRepository;
 
-    @Autowired
     AccountMapper accountMapper;
-    @Autowired
     AccountRoleRepository accountRoleRepository;
-    @Autowired
     UserLoginRepository userLoginRepository;
-    @Autowired
     JavaMailSender javaMailSender;
 
     @Override
