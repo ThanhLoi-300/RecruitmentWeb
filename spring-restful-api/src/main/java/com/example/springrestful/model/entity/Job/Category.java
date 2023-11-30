@@ -58,8 +58,6 @@ public class Category {
     private Account account;
 
 
-    @OneToMany(mappedBy = "news")
-    private List<Comment> commentList;
 
 
 }
